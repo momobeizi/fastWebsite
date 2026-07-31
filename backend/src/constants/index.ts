@@ -1,0 +1,2 @@
+// src/constants/index.ts
+export const BCRYPT_SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10);
