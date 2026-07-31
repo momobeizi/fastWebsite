@@ -10,12 +10,14 @@ import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api')
   swaggerConfig(app); //初始化 swagger
   const configService = app.get(ConfigService)
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalFilters(new AllExceptionsFilter());
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  // 暂时关闭，排查问题
+  // app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   const port = configService.getOrThrow<number>('PORT')
   await app.listen(port);
   console.log(`服务已启动可访问：http://localhost:${port}`)
