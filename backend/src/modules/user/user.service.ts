@@ -5,7 +5,8 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt'
 import { BCRYPT_SALT_ROUNDS } from 'src/constants';
-import { paginate, PaginateQuery } from 'nestjs-paginate';
+import { PaginateQuery } from 'nestjs-paginate';
+import { paginateData } from 'src/common/utils/pagination';
 
 @Injectable()
 export class UserService {
@@ -45,9 +46,10 @@ export class UserService {
 
   // 查询用户列表
   async getUserList(query: PaginateQuery) {
-    return paginate(query, this.userRepo, {
+    return paginateData(query, this.userRepo, {
       sortableColumns: ['id', 'username', 'nickname', 'createTime'],
       searchableColumns: ['username', 'nickname'],
+      defaultSortBy: [['createTime', 'DESC']],
     });
   }
 }
