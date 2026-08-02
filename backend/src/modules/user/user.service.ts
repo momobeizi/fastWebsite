@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt'
 import { BCRYPT_SALT_ROUNDS } from 'src/constants';
 import { PaginateQuery } from 'nestjs-paginate';
 import { paginateData } from 'src/common/utils/pagination';
+import { UpdateUserDto } from './dto/request/updateUserInfo.dto';
 
 @Injectable()
 export class UserService {
@@ -51,5 +52,19 @@ export class UserService {
       searchableColumns: ['username', 'nickname'],
       defaultSortBy: [['createTime', 'DESC']],
     });
+  }
+
+  // 删除用户
+  async deleteUser(id: number){
+    return this.userRepo.softDelete(id);
+  }
+
+  // 更新用户
+  async updateUser(dto: UpdateUserDto){
+    const {id, ...data} = dto;
+    if(data.password){
+      data.password = await bcrypt.hash(data.password, BCRYPT_SALT_ROUNDS);
+    }
+    return this.userRepo.update(id, data);
   }
 }

@@ -1,18 +1,9 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { Exclude, Transform } from 'class-transformer';
-import { formatDate } from 'src/common/utils';
+import { Entity, Column } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { BaseEntity } from 'src/common/entities/base.entity';
 
 @Entity('user')
-export class User {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
+export class User extends BaseEntity {
   @Column({ length: 50, unique: true, comment: '登录账号' })
   username!: string;
 
@@ -35,11 +26,9 @@ export class User {
   @Column({ type: 'tinyint', default: 1, comment: '状态 0禁用 1启用' })
   status!: number;
 
-  @CreateDateColumn({ comment: '创建时间' })
-  @Transform(({ value }) => formatDate(value))
-  createTime!: Date;
-
-  @UpdateDateColumn({ comment: '更新时间' })
-  @Transform(({ value }) => formatDate(value))
-  updateTime!: Date;
+  @Column({ type: 'datetime', nullable: true, comment: '登录时间' })
+  loginTime?: Date;
+  
+  @Column({ length: 255, nullable: true, comment: '登录ip' })
+  loginIp?: string;
 }
