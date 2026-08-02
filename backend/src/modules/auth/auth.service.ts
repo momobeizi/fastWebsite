@@ -33,10 +33,10 @@ export class AuthService {
     async login(dto: LoginDto, ip: string) {
         const { username, password, captcha, uuid } = dto;
         //判断验证码是否正确或者过期
-        // let captchaFlag = await this.captchaService.verify(uuid, captcha)
-        // if (!captchaFlag) {
-        //     throw new BadRequestException('验证码错误或已过期')
-        // }
+        let captchaFlag = await this.captchaService.verify(uuid, captcha)
+        if (!captchaFlag) {
+            throw new BadRequestException('验证码错误或已过期')
+        }
         //判断用户是否存在
         const existUser = await this.userRepo.findOneBy({ username })
         if (!existUser) {

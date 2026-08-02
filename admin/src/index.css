@@ -1,0 +1,25 @@
+@config "../tailwind.config.js";
+@import "tailwindcss";
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  /* 定义滚动条的宽度 */
+  background-color: #c2c1c1 transparent;
+  /* 定义滚动条轨道的背景颜色 */
+}
+
+/* 定制滚动条滑块的样式 */
+::-webkit-scrollbar-thumb {
+  background-color: #c2c1c1;
+  /* 定制滑块颜色 */
+  border-radius: 5px;
+  /* 定制滑块边角的圆滑程度 */
+}

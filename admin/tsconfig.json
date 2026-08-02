@@ -1,0 +1,16 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": {
+    "baseUrl": "./", // 根目录为基准
+    "paths": {
+      "@/*": ["src/*"] // 配置 @/ 指向 src/*，这是解决路径识别的核心
+    },
+    "moduleResolution": "node", // 必须加，确保 Node 风格的路径解析
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  }
+}
