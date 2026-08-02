@@ -21,7 +21,7 @@ export class CreateUserDto {
   /**
    * 密码
    */
-  @ApiProperty({ description: '密码', example: ' 750110' })
+  @ApiProperty({ description: '密码', example: '750110' })
   @IsString()
   @IsNotEmpty({ message: '密码不能为空' })
   @Length(6, 32, { message: '密码长度6~32位' })

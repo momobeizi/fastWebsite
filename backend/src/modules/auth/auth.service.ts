@@ -44,16 +44,6 @@ export class AuthService {
         }
         //判断密码是否正确
         const isMatch = await bcrypt.compare(password, existUser.password)
-        console.log('compare 结果:', isMatch);
-
-        // 手动验证：用同样方法加密明文，看和数据库是否一致
-        const testHash = await bcrypt.hash(password, 10);
-        console.log('新生成的 hash:', testHash);
-        console.log('数据库存的 hash:', existUser.password);
-
-        console.log('数据库 hash 长度:', existUser.password.length);
-        console.log('新生成 hash 长度:', testHash.length);
-
         if (!isMatch) {
             throw new BadRequestException('用户名或密码错误')
         }
