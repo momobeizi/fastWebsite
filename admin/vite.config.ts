@@ -13,7 +13,7 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:3000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        // rewrite: (path) => path.replace(/^\/api/, ''),
       },
       // 将/uploads开头的请求代理到本地3000端口（静态资源）
       '/uploads': {

@@ -8,8 +8,8 @@ import { useAuthStore } from "@/stores";
 const { Title, Text } = Typography;
 
 interface CaptchaResponse {
-  captchaKey: string;
-  captchaImage: string;
+  svg: string;
+  uuid: string;
 }
 
 // 眼睛组件 - 跟随鼠标转动
@@ -25,25 +25,25 @@ const Eye: React.FC<EyeProps> = ({ mouseX, mouseY, eyeRef, size = 24 }) => {
 
   useEffect(() => {
     if (!eyeRef.current) return;
-    
+
     const rect = eyeRef.current.getBoundingClientRect();
     const eyeCenterX = rect.left + rect.width / 2;
     const eyeCenterY = rect.top + rect.height / 2;
-    
+
     // 计算鼠标相对于眼睛中心的角度
     const angle = Math.atan2(mouseY - eyeCenterY, mouseX - eyeCenterX);
-    
+
     // 计算距离（限制最大移动距离）
     const maxDistance = size * 0.25;
     const distance = Math.min(
       maxDistance,
       Math.sqrt(Math.pow(mouseX - eyeCenterX, 2) + Math.pow(mouseY - eyeCenterY, 2)) / 10
     );
-    
+
     // 计算瞳孔位置
     const x = Math.cos(angle) * distance;
     const y = Math.sin(angle) * distance;
-    
+
     setPupilPos({ x, y });
   }, [mouseX, mouseY, eyeRef, size]);
 
@@ -86,7 +86,7 @@ interface CharacterProps {
 const Character: React.FC<CharacterProps> = ({ mouseX, mouseY, type }) => {
   const leftEyeRef = useRef<HTMLDivElement>(null);
   const rightEyeRef = useRef<HTMLDivElement>(null);
-  
+
   const configs = {
     purple: {
       width: 140,
@@ -134,7 +134,7 @@ const Character: React.FC<CharacterProps> = ({ mouseX, mouseY, type }) => {
       eyeTop: 35,
     },
   };
-  
+
   const config = configs[type];
 
   return (
@@ -165,7 +165,7 @@ const Character: React.FC<CharacterProps> = ({ mouseX, mouseY, type }) => {
         <Eye mouseX={mouseX} mouseY={mouseY} eyeRef={leftEyeRef} size={config.eyeSize} />
         <Eye mouseX={mouseX} mouseY={mouseY} eyeRef={rightEyeRef} size={config.eyeSize} />
       </div>
-      
+
       {/* 黄色角色的嘴巴 */}
       {type === 'yellow' && (
         <div
@@ -234,7 +234,7 @@ const CartoonScene: React.FC = () => {
 const Login = () => {
   const [form] = Form.useForm();
   const [captchaUrl, setCaptchaUrl] = useState<string>('');
-  const [captchaKey, setCaptchaKey] = useState<string>('');
+  const [uuid, setuuid] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const loginStore = useAuthStore((state) => state.login);
@@ -244,9 +244,11 @@ const Login = () => {
     try {
       const res = await authApi.getCaptcha();
       const captchaData = res.data as unknown as CaptchaResponse;
-      setCaptchaUrl(captchaData.captchaImage);
-      setCaptchaKey(captchaData.captchaKey);
-      form.setFieldValue('captchaKey', captchaData.captchaKey);
+      const blob = new Blob([captchaData.svg], { type: 'image/svg+xml;charset=utf-8' })
+      const url = URL.createObjectURL(blob);
+      setCaptchaUrl(url);
+      setuuid(captchaData.uuid);
+      form.setFieldValue('uuid', captchaData.uuid);
     } catch (error) {
       console.log(error);
     }
@@ -264,7 +266,7 @@ const Login = () => {
     try {
       const loginValues = {
         ...values,
-        captchaKey: captchaKey || values.captchaKey,
+        uuid: uuid || values.uuid,
       };
 
       const res = await authApi.login(loginValues);
@@ -333,8 +335,8 @@ const Login = () => {
           >
             <Form.Item
               style={{ display: 'none' }}
-              name="captchaKey"
-              initialValue={captchaKey}
+              name="uuid"
+              initialValue={uuid}
             >
               <Input type="hidden" />
             </Form.Item>

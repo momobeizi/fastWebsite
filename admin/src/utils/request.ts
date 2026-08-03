@@ -43,12 +43,12 @@ request.interceptors.response.use(
           message.error("请求的资源不存在");
           break;
         case 500:
-          message.error(data.msg || "服务器内部错误");
+          message.error(data.message || "服务器内部错误");
           break;
         default:
-          message.error(data.msg || "请求失败");
+          message.error(data.message || "请求失败");
       }
-      return Promise.reject(new Error(data.msg || "请求失败"));
+      return Promise.reject(new Error(data.message || "请求失败"));
     }
   },
   (error) => {
@@ -69,7 +69,8 @@ request.interceptors.response.use(
           message.error("服务器内部错误");
           break;
         default:
-          message.error(`请求失败，状态码：${error.response.status}`);
+          message.error(error.response.data.message);
+          // message.error(`请求失败，状态码：${error.response.status}`);
       }
     } else if (error.request) {
       message.error("网络错误，无法连接服务器");

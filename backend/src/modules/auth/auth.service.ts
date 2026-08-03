@@ -73,4 +73,11 @@ export class AuthService {
         }
     }
 
+    //获取当前登录的用户信息
+    async getUserInfo(token: string) {
+        const userInfo = this.redis.get(RedisKey.loginUserInfo(token))
+        console.log(userInfo)
+        return userInfo
+    }
+
 }
