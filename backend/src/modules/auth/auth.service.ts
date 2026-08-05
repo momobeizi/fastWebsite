@@ -80,4 +80,9 @@ export class AuthService {
         return userInfo
     }
 
+    //退出登录
+    async logout(token: string) {
+        await this.redis.del(RedisKey.loginUserInfo(token))
+    }
+
 }

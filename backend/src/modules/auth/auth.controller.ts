@@ -26,4 +26,10 @@ export class AuthController {
     getUserInfo(@Headers("Authorization") token: string) {
         return this.authService.getUserInfo(token)
     }
+
+    @ApiOperation({ summary: "退出登录" })
+    @Post('/logout')
+    logout(@Headers("Authorization") token: string) {
+        return this.authService.logout(token)
+    }
 }
