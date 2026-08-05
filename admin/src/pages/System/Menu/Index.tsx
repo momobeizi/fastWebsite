@@ -75,11 +75,11 @@ const collectExpandedKeys = (nodes: MenuOption[]): string[] => {
 };
 
 /** 渲染类型标签 */
-const TypeTag = ({ type }: { type?: string }) => {
+const TypeTag = ({ type }: { type?: number }) => {
   switch (type) {
-    case 'directory': return <Tag color="orange">目录</Tag>;
-    case 'permission': return <Tag color="red">权限</Tag>;
-    case 'menu':
+    case 0: return <Tag color="orange">目录</Tag>;
+    case 2: return <Tag color="red">权限</Tag>;
+    case 1:
     default: return <Tag color="green">菜单</Tag>;
   }
 };
@@ -128,11 +128,11 @@ const MenuPage = () => {
     form.setFieldsValue({
       parentId: parentMenu?.id ?? 0,
       sort: 0,
-      status: 'active',
+      status: 1,
       visible: true,
       keepAlive: false,
       isRoute: true,
-      type: 'menu',
+      type: 1,
     });
     setIsEdit(false);
     setEditId(null);
@@ -151,13 +151,13 @@ const MenuPage = () => {
       const detail = res.data;
       form.setFieldsValue({
         name: detail.name,
-        type: detail.type ?? 'menu',
+        type: detail.type ?? 1,
         path: detail.path,
         component: detail.component,
         icon: detail.icon,
         parentId: detail.parentId || 0,
         sort: detail.sort ?? 0,
-        status: detail.status ?? 'active',
+        status: detail.status ?? 1,
         permission: detail.permission,
         visible: detail.visible === 1,
         keepAlive: detail.keepAlive === 1,
@@ -267,7 +267,7 @@ const MenuPage = () => {
       dataIndex: 'type',
       key: 'type',
       width: 80,
-      render: (type: string) => <TypeTag type={type} />,
+      render: (type: number) => <TypeTag type={type} />,
     },
     {
       title: '图标',
@@ -317,7 +317,7 @@ const MenuPage = () => {
         const menu: MenuOption = record as MenuOption;
         return (
           <Space size="small">
-            {menu.type !== 'permission' && (
+            {menu.type !== 2 && (
               <Button
                 type="primary"
                 icon={<PlusOutlined />}
@@ -394,7 +394,7 @@ const MenuPage = () => {
         onOk={handleSave}
         onCancel={() => setModalVisible(false)}
         confirmLoading={modalLoading}
-        width={620}
+        width={820}
         destroyOnClose
       >
         <Form
@@ -402,68 +402,69 @@ const MenuPage = () => {
           layout="vertical"
           style={{ marginTop: 16 }}
         >
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
           <Form.Item name="type" label="菜单类型" rules={[{ required: true }]}>
             <Select>
-              <Option value="directory">目录（无页面，仅用于折叠分组）</Option>
-              <Option value="menu">菜单（指向具体页面）</Option>
-              <Option value="permission">权限（按钮级别权限标识）</Option>
+              <Option value={0}>目录（无页面，仅用于折叠分组）</Option>
+              <Option value={1}>菜单（指向具体页面）</Option>
+              <Option value={2}>权限（按钮级别权限标识）</Option>
             </Select>
           </Form.Item>
 
-          <Form.Item name="name" label="菜单名称" rules={[{ required: true, message: '请输入菜单名称' }]}>
-            <Input placeholder="如：用户管理" />
-          </Form.Item>
+            <Form.Item name="name" label="菜单名称" rules={[{ required: true, message: '请输入菜单名称' }]}>
+              <Input placeholder="如：用户管理" />
+            </Form.Item>
 
-          <Form.Item
-            noStyle
-            shouldUpdate={(prev, curr) => prev.type !== curr.type}
-          >
-            {({ getFieldValue }) => {
-              const type = getFieldValue('type');
-              return (
-                <>
-                  {type !== 'permission' && (
-                    <Form.Item name="path" label="路由路径" rules={[{ required: type !== 'permission', message: '请输入路由路径' }]}>
+            <Form.Item
+              noStyle
+              shouldUpdate={(prev, curr) => prev.type !== curr.type}
+            >
+              {({ getFieldValue }) => {
+                const type = getFieldValue('type');
+                return (
+                  <>
+                  {type !== 2 && (
+                    <Form.Item name="path" label="路由路径" rules={[{ required: type !== 2, message: '请输入路由路径' }]}>
                       <Input placeholder="如：/system/user" />
                     </Form.Item>
                   )}
-                  {type === 'menu' && (
+                  {type === 1 && (
                     <Form.Item name="component" label="组件名称" rules={[{ required: true, message: '请输入组件名称' }]}>
                       <Input placeholder="如：User（对应 pages/System/User/Index.tsx）" />
                     </Form.Item>
                   )}
-                  {type !== 'permission' && (
-                    <Form.Item name="icon" label="图标名称">
-                      <Input placeholder="如：UserOutlined" />
-                    </Form.Item>
-                  )}
-                </>
-              );
-            }}
-          </Form.Item>
+                  {type !== 2 && (
+                      <Form.Item name="icon" label="图标名称">
+                        <Input placeholder="如：UserOutlined" />
+                      </Form.Item>
+                    )}
+                  </>
+                );
+              }}
+            </Form.Item>
 
-          <Form.Item name="parentId" label="父级菜单">
-            <TreeSelect
-              treeData={selectTreeData}
-              placeholder="默认为顶级菜单"
-              allowClear
-              treeDefaultExpandAll
-            />
-          </Form.Item>
+            <Form.Item name="parentId" label="父级菜单">
+              <TreeSelect
+                treeData={selectTreeData}
+                placeholder="默认为顶级菜单"
+                allowClear
+                treeDefaultExpandAll
+              />
+            </Form.Item>
 
-          <Form.Item name="permission" label="权限标识" rules={[{ required: true, message: '请输入权限标识' }]}>
-            <Input placeholder="如：system:user:list" />
-          </Form.Item>
+            <Form.Item name="permission" label="权限标识" rules={[{ required: true, message: '请输入权限标识' }]}>
+              <Input placeholder="如：system:user:list" />
+            </Form.Item>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
+
             <Form.Item name="sort" label="排序号">
               <InputNumber min={0} style={{ width: '100%' }} placeholder="数值越小越靠前" />
             </Form.Item>
 
             <Form.Item name="status" label="状态">
               <Select>
-                <Option value="active">启用</Option>
-                <Option value="inactive">禁用</Option>
+                <Option value={1}>启用</Option>
+                <Option value={0}>禁用</Option>
               </Select>
             </Form.Item>
 

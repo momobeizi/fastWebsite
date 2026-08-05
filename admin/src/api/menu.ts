@@ -4,13 +4,13 @@ import request from '@/utils/request';
 export interface MenuOption {
   id: number;
   name: string;
-  type?: string;
+  type?: number;
   path: string;
   component?: string;
   icon?: string;
   parentId: number;
   sort?: number;
-  status?: string;
+  status?: number;
   permission?: string;
   visible?: number;
   keepAlive?: number;
