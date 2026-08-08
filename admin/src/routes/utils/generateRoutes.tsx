@@ -60,10 +60,10 @@ export const convertMenusToRoutes = (menus: MenuOption[], parentPath: string = '
   return menus.map(menu => {
     // 处理路径，确保正确的路由匹配
     const routePath = menu.path === '/' ? '' : getRelativePath(menu.path, parentPath);
-    
     // 处理组件
     let routeElement = undefined;
-    if (menu.isRoute && menu.component) {
+    // debugger
+    if (menu.type && menu.component) {
       const LazyComponent = lazyImport(menu.component);
       routeElement = <LazyComponent />;
     } else if (menu.path === '/') {

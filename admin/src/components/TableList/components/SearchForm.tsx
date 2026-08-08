@@ -135,7 +135,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
   }
 
   return (
-    <div className="py-2 bg-white dark:bg-[#333] rounded shadow mb-4">
+    <div className="bg-white dark:bg-[#333] border-b border-[#E5E5E5] dark:border-[#555] border-dashed mb-2">
       <div className="flex justify-between items-center">
         <div className="dark:text-white  ml-4">搜索</div>
         <Button

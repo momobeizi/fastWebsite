@@ -9,8 +9,8 @@ export class MenuController {
     constructor(private readonly menuService: MenuService) { }
 
 
-    @Get('/list')
-    @ApiOperation({ summary: '获取菜单列表' })
+    @Get('/all')
+    @ApiOperation({ summary: '获取所有菜单' })
     getMenuList() {
         return this.menuService.getMenuList()
     }
@@ -19,6 +19,12 @@ export class MenuController {
     @ApiOperation({ summary: '添加菜单' })
     addMenu(@Body() dto: AddMenuDto) {
         return this.menuService.addMenu(dto)
+    }
+
+    @Get('/current')
+    @ApiOperation({ summary: '获取当前用户菜单' })
+    getCurrentUserMenus() {
+        return this.menuService.getCurrentUserMenus()
     }
 
 }

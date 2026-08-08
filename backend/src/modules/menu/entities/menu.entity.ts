@@ -9,7 +9,7 @@ export class Menu extends BaseEntity {
     @Column({ length: 100, comment: '菜单路径' })
     path?: string
 
-    @Column({ length: 100, comment: '菜单组件' })
+    @Column({ length: 100, comment: '菜单组件', nullable: true })
     component?: string
 
     @Column({ length: 50, comment: '菜单图标', nullable: true })

@@ -134,7 +134,7 @@ const TableList = <T extends any>({
 
   return (
     <ConfigProvider locale={zhCN}>
-      <div className="p-2">
+      <div className="p-2 bg-white dark:bg-[#333]">
         {/* 搜索区域 */}
         {showSearch && searchFields.length > 0 && (
           <SearchForm
@@ -146,7 +146,7 @@ const TableList = <T extends any>({
           />
         )}
 
-        <div className="bg-white dark:bg-[#333] rounded shadow p-4">
+        <div className="bg-white dark:bg-[#333] p-2">
           {/* 工具栏 */}
           {showToolbar && (
             <TableToolbar

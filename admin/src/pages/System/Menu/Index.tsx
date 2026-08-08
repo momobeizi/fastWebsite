@@ -357,7 +357,7 @@ const MenuPage = () => {
   // -------- 渲染 --------
 
   return (
-    <div style={{ padding: 24 }}>
+    <div style={{ padding: 24, backgroundColor: '#fff', borderRadius: 8 }}>
       {/* 顶部操作栏 */}
       <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2 style={{ margin: 0 }}>菜单管理</h2>

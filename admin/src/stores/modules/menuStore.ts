@@ -4,6 +4,7 @@ import { persist } from "zustand/middleware";
 import { convertMenusToRoutes as convertToRoutes } from "@/routes/utils/generateRoutes";
 import type { RouteObject } from "react-router-dom";
 import { useAuthStore } from "./authStore";
+import { getCurrentUserMenus } from "@/api/menu";
 
 // 硬编码的静态菜单数据（不再从后端接口获取）
 const staticMenus: MenuOption[] = [
@@ -197,7 +198,7 @@ export const useMenuStore = create<MenuState>()(
       dynamicRoutes: [],
       
       // 加载菜单（使用硬编码静态数据，不再请求后端接口）
-      loadMenus: () => {
+      loadMenus:  async () => {
         // 检查是否有 token，没有则不加载
         const token = useAuthStore.getState().token;
         if (!token) {
@@ -206,21 +207,22 @@ export const useMenuStore = create<MenuState>()(
         }
         
         // ===== 原后端接口逻辑（已注释） =====
-        // try {
-        //   const res = await getCurrentUserMenus();
-        //   const menuList = res.data ?? [];
-        //   set({ menus: menuList });
-        //   const dynamicRoutes = convertToRoutes(menuList);
-        //   set({ dynamicRoutes });
-        // } catch (error) {
-        //   console.error('Failed to load menus:', error);
-        // }
+        try {
+          const res = await getCurrentUserMenus();
+          const menuList = res.data ?? [];
+          set({ menus: menuList });
+          const dynamicRoutes = convertToRoutes(menuList);
+          console.log('dynamicRoutes', dynamicRoutes);
+          set({ dynamicRoutes });
+        } catch (error) {
+          console.error('Failed to load menus:', error);
+        }
         
         // 使用静态菜单数据
-        const menuList = staticMenus;
-        set({ menus: menuList });
-        const dynamicRoutes = convertToRoutes(menuList);
-        set({ dynamicRoutes });
+        // const menuList = staticMenus;
+        // set({ menus: menuList });
+        // const dynamicRoutes = convertToRoutes(menuList);
+        // set({ dynamicRoutes });
       },
       
       // 更新菜单
