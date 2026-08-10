@@ -84,7 +84,6 @@ export const convertMenusToRoutes = (menus: MenuOption[], parentPath: string = '
     const routePath = menu.path === '/' ? '' : getRelativePath(menu.path, parentPath);
     // 处理组件
     let routeElement = undefined;
-    // debugger
     if (menu.component) {
       const LazyComponent = lazyImport(menu.component);
       routeElement = <LazyComponent />;

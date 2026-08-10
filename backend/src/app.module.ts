@@ -8,6 +8,7 @@ import { CaptchaModule } from './common/captcha/captcha.module';
 import { RedisModule } from './common/redis/redis.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MenuModule } from './modules/menu/menu.module';
+import { RoleModule } from './modules/role/role.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MenuModule } from './modules/menu/menu.module';
     CaptchaModule, //验证码模块
     AuthModule, // 鉴权模块(登录、注册、修改密码)
     MenuModule, // 菜单模块
+    RoleModule, // 角色模块
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -84,14 +84,8 @@ const SearchForm: React.FC<SearchFormProps> = ({
   // 处理搜索
   const handleSearch = () => {
     try {
-      debugger
       // 检查表单是否有任何字段
       console.log("Fields:", fields.map(f => f.name));
-      
-      // 获取单个字段测试
-      console.log("name field:", form.getFieldValue('name'));
-      console.log("gender field:", form.getFieldValue('gender'));
-      console.log("status field:", form.getFieldValue('status'));
       
       // 获取所有表单值
       const values = form.getFieldsValue();
