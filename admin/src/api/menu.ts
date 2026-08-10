@@ -49,12 +49,12 @@ export const addMenu = (menu: Partial<MenuOption>): Promise<ApiResult<boolean>> 
 
 // 更新菜单
 export const updateMenu = (menu: Partial<MenuOption>): Promise<ApiResult<boolean>> => {
-  return request.put('/menu/update', menu);
+  return request.post('/menu/update', menu);
 };
 
 // 删除菜单
 export const deleteMenu = (id: number): Promise<ApiResult<boolean>> => {
-  return request.delete(`/menu/delete/${id}`);
+  return request.get(`/menu/delete/${id}`);
 };
 
 // 获取菜单详情

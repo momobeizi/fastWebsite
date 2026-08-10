@@ -1,36 +1,58 @@
-import React, { lazy, Suspense } from 'react';
+import { lazy } from 'react';
 import type { RouteObject } from 'react-router-dom';
 import type { MenuOption } from '@/api/menu';
 
+// 组件名到路径的映射
+const componentMap: Record<string, string> = {
+  'Home': '@/pages/Home',
+  'About': '@/pages/About',
+  'Menu': '@/pages/System/Menu/Index',
+  'User': '@/pages/System/User/Index',
+  'Role': '@/pages/System/Role/Index',
+  'OperationLog': '@/pages/System/Log/OperationLog',
+  'LoginLog': '@/pages/System/Log/LoginLog',
+  'WebsiteConfig': '@/pages/System/Config/WebsiteConfig',
+  'Article': '@/pages/Content/Article/Index',
+  'Category': '@/pages/Content/Category/Index',
+  'Tag': '@/pages/Content/Tag/Index',
+  'Carousel': '@/pages/Content/Carousel/Index',
+  'ArticleForm': '@/pages/Content/Article/ArticleForm',
+};
+
 // 动态导入组件
 const lazyImport = (component: string) => {
+  // 先从映射表找
+  if (componentMap[component]) {
+    component = componentMap[component];
+  }
+
   // 使用switch语句处理不同组件的导入
   switch (component) {
-    case 'Home':
+    case '@/pages/Home':
       return lazy(() => import('@/pages/Home'));
-    case 'About':
+    case '@/pages/About':
       return lazy(() => import('@/pages/About'));
-    case 'Menu':
+    case '@/pages/System/Menu/Index':
       return lazy(() => import('@/pages/System/Menu/Index'));
-    case 'User':
+    case '@/pages/System/User/Index':
       return lazy(() => import('@/pages/System/User/Index'));
-    case 'Role':
+    case '@/pages/System/Role/Index':
       return lazy(() => import('@/pages/System/Role/Index'));
-    case 'OperationLog':
+    case '@/pages/System/Log/OperationLog':
       return lazy(() => import('@/pages/System/Log/OperationLog'));
-    case 'LoginLog':
+    case '@/pages/System/Log/LoginLog':
       return lazy(() => import('@/pages/System/Log/LoginLog'));
-    case 'WebsiteConfig':
+    case '@/pages/System/Config/WebsiteConfig':
       return lazy(() => import('@/pages/System/Config/WebsiteConfig'));
-    case 'Article':
+    case '@/pages/Content/Article/Index':
       return lazy(() => import('@/pages/Content/Article/Index'));
-    case 'Category':
+    case '@/pages/Content/Category/Index':
       return lazy(() => import('@/pages/Content/Category/Index'));
-    case 'Tag':
+    case '@/pages/Content/Tag/Index':
       return lazy(() => import('@/pages/Content/Tag/Index'));
-    case 'Carousel':
+    case '@/pages/Content/Carousel/Index':
       return lazy(() => import('@/pages/Content/Carousel/Index'));
-    case 'ArticleForm':
+    case '@/pages/Content/Article/ArticleForm':
       return lazy(() => import('@/pages/Content/Article/ArticleForm'));
     default:
       // 对于未预定义的组件，使用404
@@ -63,7 +85,7 @@ export const convertMenusToRoutes = (menus: MenuOption[], parentPath: string = '
     // 处理组件
     let routeElement = undefined;
     // debugger
-    if (menu.type && menu.component) {
+    if (menu.component) {
       const LazyComponent = lazyImport(menu.component);
       routeElement = <LazyComponent />;
     } else if (menu.path === '/') {

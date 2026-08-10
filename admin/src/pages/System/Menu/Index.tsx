@@ -131,7 +131,6 @@ const MenuPage = () => {
       status: 1,
       visible: true,
       keepAlive: false,
-      isRoute: true,
       type: 1,
     });
     setIsEdit(false);
@@ -161,7 +160,6 @@ const MenuPage = () => {
         permission: detail.permission,
         visible: detail.visible === 1,
         keepAlive: detail.keepAlive === 1,
-        isRoute: detail.isRoute !== 0,
       });
     } catch {
       message.error('加载菜单详情失败');
@@ -212,7 +210,6 @@ const MenuPage = () => {
       permission: values.permission,
       visible: values.visible ? 1 : 0,
       keepAlive: values.keepAlive ? 1 : 0,
-      isRoute: values.isRoute ? 1 : 0,
     };
 
     setModalLoading(true);
@@ -228,7 +225,7 @@ const MenuPage = () => {
       loadMenus();
       menuStore.loadMenus();
     } catch {
-      message.error(isEdit ? '更新失败' : '新增失败');
+      // message.error(isEdit ? '更新失败' : '新增失败');
     } finally {
       setModalLoading(false);
     }
@@ -476,9 +473,6 @@ const MenuPage = () => {
               <Switch checkedChildren="缓存" unCheckedChildren="不缓存" />
             </Form.Item>
 
-            <Form.Item name="isRoute" label="是否路由" valuePropName="checked">
-              <Switch checkedChildren="是" unCheckedChildren="否" />
-            </Form.Item>
           </div>
         </Form>
       </Modal>

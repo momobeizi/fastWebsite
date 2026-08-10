@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body} from "@nestjs/common";
+import { Controller, Get, Post, Body, Param} from "@nestjs/common";
 import { MenuService } from "./menu.service";
 import { ApiOperation } from "@nestjs/swagger";
 import { AddMenuDto } from "./dto/request/addMenu.dto";
+import { UpdateMenuDto } from "./dto/request/updateMenu.dto";
 
 
 @Controller('menu')
@@ -25,6 +26,24 @@ export class MenuController {
     @ApiOperation({ summary: '获取当前用户菜单' })
     getCurrentUserMenus() {
         return this.menuService.getCurrentUserMenus()
+    }
+
+    @Get('get/:id')
+    @ApiOperation({ summary: '获取菜单详情' })
+    getMenuById(@Param('id') id: number) {
+        return this.menuService.getMenuById(id)
+    }
+
+    @Post('/update')
+    @ApiOperation({ summary: '更新菜单' })
+    updateMenu(@Body() dto: UpdateMenuDto) {
+        return this.menuService.updateMenu(dto)
+    }
+
+    @Get('/delete/:id')
+    @ApiOperation({ summary: '删除菜单' })
+    deleteMenu(@Param('id') id: number) {
+        return this.menuService.deleteMenu(id)
     }
 
 }

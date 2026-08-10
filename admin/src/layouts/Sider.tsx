@@ -37,10 +37,14 @@ const Sider = () => {
   // 将菜单转换为Ant Design Menu组件需要的格式
   const convertMenusToAntMenu = (menuList: any[]): any[] => {
     return menuList.map(menu => {
+      const hasChildren = menu.children && menu.children.length > 0;
+      const isLeaf = !hasChildren && menu.path && menu.component;
+
       const menuItem: any = {
         key: menu.id.toString(),
         icon: menu.icon ? IconMap[menu.icon] || <MenuOutlined /> : <MenuOutlined />,
-        label: menu.path && menu.isRoute ? (
+        // 只有叶子节点（有页面组件的菜单）才加 Link，目录只展示文字
+        label: isLeaf ? (
           <Link to={menu.path}>{menu.name}</Link>
         ) : (
           menu.name
@@ -48,7 +52,7 @@ const Sider = () => {
       };
       
       // 如果有子菜单，递归转换
-      if (menu.children && menu.children.length > 0) {
+      if (hasChildren) {
         menuItem.children = convertMenusToAntMenu(menu.children);
       }
       
