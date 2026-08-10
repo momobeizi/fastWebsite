@@ -23,13 +23,15 @@ export class AuthController {
 
     @ApiOperation({ summary: "获取当前登录的用户信息" })
     @Get('/info')
-    getUserInfo(@Headers("Authorization") token: string) {
+    getUserInfo(@Headers("Authorization") auth: string) {
+        const token = auth?.replace('Bearer ', '');
         return this.authService.getUserInfo(token)
     }
 
     @ApiOperation({ summary: "退出登录" })
     @Post('/logout')
-    logout(@Headers("Authorization") token: string) {
+    logout(@Headers("Authorization") auth: string) {
+        const token = auth?.replace('Bearer ', '');
         return this.authService.logout(token)
     }
 }

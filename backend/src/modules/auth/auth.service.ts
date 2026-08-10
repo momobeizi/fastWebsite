@@ -75,9 +75,11 @@ export class AuthService {
 
     //获取当前登录的用户信息
     async getUserInfo(token: string) {
-        const userInfo = this.redis.get(RedisKey.loginUserInfo(token))
-        console.log(userInfo)
-        return userInfo
+        const userInfo = await this.redis.get(RedisKey.loginUserInfo(token))
+        if (!userInfo) {
+            throw new BadRequestException('用户信息不存在或已过期')
+        }
+        return JSON.parse(userInfo)
     }
 
     //退出登录
