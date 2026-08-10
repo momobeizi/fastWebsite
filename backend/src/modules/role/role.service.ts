@@ -102,4 +102,9 @@ export class RoleService {
             await manager.delete(Role, id);
         });
     }
+
+    // 获取所有角色
+    getAllRoles() {
+        return this.roleRepository.find();
+    }
 }

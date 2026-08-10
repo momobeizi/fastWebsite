@@ -33,5 +33,17 @@ export class RoleController {
     updateRole(@Body() dto: UpdateRoleDto) {
         return this.roleService.updateRole(dto)
     }
+
+    @Get('/delete/:id')
+    @ApiOperation({ summary: '删除角色' })
+    deleteRole(@Param('id') id: number) {
+        return this.roleService.deleteRole(id)
+    }
+
+    @Get('/all')
+    @ApiOperation({ summary: '获取所有角色' })
+    getAllRoles() {
+        return this.roleService.getAllRoles()
+    }
     
 }

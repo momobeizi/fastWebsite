@@ -105,11 +105,11 @@ const RoleList: React.FC = () => {
         search: searchParams.name || undefined,
       });
       if (res?.data) {
-        // nestjs-paginate 返回 { data: [...], meta: { totalItems, ... } }
-        setData((res.data as any)?.data || []);
+        // paginateData 返回 { list, total, page, pageSize, totalPages }
+        setData((res.data as any)?.list || []);
         setPagination((prev) => ({
           ...prev,
-          total: (res.data as any)?.meta?.totalItems || 0,
+          total: (res.data as any)?.total || 0,
         }));
       } else {
         message.error("获取角色列表失败");
@@ -133,11 +133,11 @@ const RoleList: React.FC = () => {
         search: params.name || undefined,
       });
       if (res?.data) {
-        setData((res.data as any)?.data || []);
+        setData((res.data as any)?.list || []);
         setPagination((prev) => ({
           ...prev,
           current: 1,
-          total: (res.data as any)?.meta?.totalItems || 0,
+          total: (res.data as any)?.total || 0,
         }));
       } else {
         message.error("搜索角色失败");
