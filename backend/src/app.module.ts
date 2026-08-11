@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
@@ -9,6 +10,8 @@ import { RedisModule } from './common/redis/redis.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MenuModule } from './modules/menu/menu.module';
 import { RoleModule } from './modules/role/role.module';
+import { LogModule } from './modules/log/log.module';
+import { AuthGuard } from './common/guards/auth.guard';
 
 @Module({
   imports: [
@@ -27,8 +30,15 @@ import { RoleModule } from './modules/role/role.module';
     AuthModule, // 鉴权模块(登录、注册、修改密码)
     MenuModule, // 菜单模块
     RoleModule, // 角色模块
+    LogModule, // 请求日志模块
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule { }
