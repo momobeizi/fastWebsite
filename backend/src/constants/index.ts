@@ -10,4 +10,5 @@ export const RedisKey = {
   captcha: (uuid: string) => `${PREFIX}:auth:captcha:${uuid}`,
   token: (userId: number) => `${PREFIX}:auth:token:${userId}`,
   loginUserInfo: (token: string) => `${PREFIX}:auth:loginUserInfo:${token}`,
+  dictData: (code: string) => `${PREFIX}:dict:data:${code}`,
 } as const;

@@ -11,6 +11,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { MenuModule } from './modules/menu/menu.module';
 import { RoleModule } from './modules/role/role.module';
 import { LogModule } from './modules/log/log.module';
+import { DictModule } from './modules/dict/dict.module';
 import { AuthGuard } from './common/guards/auth.guard';
 
 @Module({
@@ -31,6 +32,7 @@ import { AuthGuard } from './common/guards/auth.guard';
     MenuModule, // 菜单模块
     RoleModule, // 角色模块
     LogModule, // 请求日志模块
+    DictModule, // 数据字典模块
   ],
   controllers: [AppController],
   providers: [

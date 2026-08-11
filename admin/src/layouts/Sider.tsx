@@ -34,30 +34,31 @@ const Sider = () => {
     loadMenus();
   }, [loadMenus]);
   
-  // 将菜单转换为Ant Design Menu组件需要的格式
+  // 将菜单转换为Ant Design Menu组件需要的格式，过滤掉不可见的
   const convertMenusToAntMenu = (menuList: any[]): any[] => {
-    return menuList.map(menu => {
-      const hasChildren = menu.children && menu.children.length > 0;
-      const isLeaf = !hasChildren && menu.path && menu.component;
+    return menuList
+      .filter(menu => menu.visible !== 0)
+      .map(menu => {
+        const children = menu.children?.filter((child: any) => child.visible !== 0);
+        const hasChildren = children && children.length > 0;
+        const isLeaf = !hasChildren && menu.path && menu.component;
 
-      const menuItem: any = {
-        key: menu.id.toString(),
-        icon: menu.icon ? IconMap[menu.icon] || <MenuOutlined /> : <MenuOutlined />,
-        // 只有叶子节点（有页面组件的菜单）才加 Link，目录只展示文字
-        label: isLeaf ? (
-          <Link to={menu.path}>{menu.name}</Link>
-        ) : (
-          menu.name
-        ),
-      };
-      
-      // 如果有子菜单，递归转换
-      if (hasChildren) {
-        menuItem.children = convertMenusToAntMenu(menu.children);
-      }
-      
-      return menuItem;
-    });
+        const menuItem: any = {
+          key: menu.id.toString(),
+          icon: menu.icon ? IconMap[menu.icon] || <MenuOutlined /> : <MenuOutlined />,
+          label: isLeaf ? (
+            <Link to={menu.path}>{menu.name}</Link>
+          ) : (
+            menu.name
+          ),
+        };
+        
+        if (hasChildren) {
+          menuItem.children = convertMenusToAntMenu(children);
+        }
+        
+        return menuItem;
+      });
   };
   
   // 查找当前激活的菜单key，同时返回所有需要展开的父级key
