@@ -60,28 +60,29 @@ const Sider = () => {
     });
   };
   
-  // 查找当前激活的菜单key
-  const findActiveMenuKey = (menuList: any[], currentPath: string): string => {
+  // 查找当前激活的菜单key，同时返回所有需要展开的父级key
+  const findActiveAndOpenKeys = (menuList: any[], currentPath: string, parentKeys: string[] = []): { activeKey: string; openKeys: string[] } => {
     for (const menu of menuList) {
       if (menu.path === currentPath) {
-        return menu.id.toString();
+        return { activeKey: menu.id.toString(), openKeys: parentKeys };
       }
       if (menu.children && menu.children.length > 0) {
-        const found = findActiveMenuKey(menu.children, currentPath);
-        if (found) {
-          return found;
+        const result = findActiveAndOpenKeys(menu.children, currentPath, [...parentKeys, menu.id.toString()]);
+        if (result.activeKey) {
+          return result;
         }
       }
     }
-    return "";
+    return { activeKey: "", openKeys: [] };
   };
   
-  const activeKey = findActiveMenuKey(menus, location.pathname) || "1";
+  const { activeKey, openKeys } = findActiveAndOpenKeys(menus, location.pathname);
   
   return (
     <Menu
       mode="inline"
-      selectedKeys={[activeKey]}
+      selectedKeys={activeKey ? [activeKey] : ["1"]}
+      defaultOpenKeys={openKeys}
       items={convertMenusToAntMenu(menus)}
     />
   );
