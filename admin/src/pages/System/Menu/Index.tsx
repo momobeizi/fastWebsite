@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Table, Button, Popconfirm, message, Modal, Form, Input,
   Select, TreeSelect, Switch, InputNumber, Space, Tag,
@@ -7,6 +7,7 @@ import {
   PlusOutlined, EditOutlined, DeleteOutlined,
   ExclamationCircleOutlined, SyncOutlined,
 } from '@ant-design/icons';
+import * as Icons from '@ant-design/icons';
 import type { MenuOption } from '@/api/menu';
 import { getAllMenus, addMenu, updateMenu, deleteMenu, getMenuById } from '@/api/menu';
 import { useMenuStore } from '@/stores/modules/menuStore';
@@ -84,6 +85,17 @@ const TypeTag = ({ type }: { type?: number }) => {
   }
 };
 
+/** 生成所有 Outlined 结尾的图标选项 */
+const getAllIconOptions = () => {
+  return Object.keys(Icons)
+    .filter(key => key.includes('Outlined'))
+    .map(key => ({
+      label: key,
+      value: key,
+      icon: (Icons as any)[key] ? React.createElement((Icons as any)[key]) : null,
+    }));
+};
+
 // ========== 主组件 ==========
 
 const MenuPage = () => {
@@ -97,6 +109,11 @@ const MenuPage = () => {
   const [editId, setEditId] = useState<number | null>(null);
   const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([]);
   const menuStore = useMenuStore();
+
+  // 图标选择弹窗
+  const [iconModalVisible, setIconModalVisible] = useState(false);
+  const [iconSearch, setIconSearch] = useState('');
+  const iconOptions = useMemo(() => getAllIconOptions(), []);
 
   // -------- 数据加载 --------
 
@@ -354,7 +371,7 @@ const MenuPage = () => {
   // -------- 渲染 --------
 
   return (
-    <div style={{ padding: 24, backgroundColor: '#fff', borderRadius: 8 }}>
+    <div className="p-2 bg-white rounded dark:bg-gray-800 dark:text-white">
       {/* 顶部操作栏 */}
       <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2 style={{ margin: 0 }}>菜单管理</h2>
@@ -432,7 +449,17 @@ const MenuPage = () => {
                   )}
                   {type !== 2 && (
                       <Form.Item name="icon" label="图标名称">
-                        <Input placeholder="如：UserOutlined" />
+                        <Input
+                          placeholder="点击选择图标"
+                          readOnly
+                          onClick={() => setIconModalVisible(true)}
+                          addonAfter={
+                            form.getFieldValue('icon') && (Icons as any)[form.getFieldValue('icon')]
+                              ? React.createElement((Icons as any)[form.getFieldValue('icon')])
+                              : null
+                          }
+                          style={{ cursor: 'pointer' }}
+                        />
                       </Form.Item>
                     )}
                   </>
@@ -475,6 +502,49 @@ const MenuPage = () => {
 
           </div>
         </Form>
+      </Modal>
+
+      {/* 图标选择弹窗 */}
+      <Modal
+        title="选择图标"
+        open={iconModalVisible}
+        onCancel={() => setIconModalVisible(false)}
+        footer={null}
+        width={700}
+        zIndex={1050}
+      >
+        <Input
+          placeholder="搜索图标..."
+          onChange={(e) => setIconSearch(e.target.value)}
+          style={{ marginBottom: 16 }}
+          allowClear
+        />
+        <div style={{ maxHeight: 400, overflow: 'auto', display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          {iconOptions
+            .filter(item => !iconSearch || item.label.toLowerCase().includes(iconSearch.toLowerCase()))
+            .map(item => (
+              <div
+                key={item.value}
+                onClick={() => {
+                  form.setFieldValue('icon', item.value);
+                  setIconModalVisible(false);
+                }}
+                style={{
+                  width: 80,
+                  padding: '8px 4px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  border: '1px solid #d9d9d9',
+                  borderRadius: 6,
+                  background: form.getFieldValue('icon') === item.value ? '#e6f4ff' : '#fff',
+                  borderColor: form.getFieldValue('icon') === item.value ? '#1677ff' : '#d9d9d9',
+                }}
+              >
+                <div style={{ fontSize: 24, marginBottom: 4 }}>{item.icon}</div>
+                <div style={{ fontSize: 10, color: '#666', wordBreak: 'break-all' }}>{item.label}</div>
+              </div>
+            ))}
+        </div>
       </Modal>
     </div>
   );

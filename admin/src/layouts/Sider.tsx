@@ -1,29 +1,10 @@
+import React from "react";
 import { Menu } from "antd";
 import { Link, useLocation } from "react-router-dom";
 import { useMenuStore } from "@/stores/modules/menuStore";
 import { useEffect } from "react";
-import {
-  HomeOutlined,
-  SettingOutlined,
-  UserOutlined,
-  MenuOutlined,
-  TeamOutlined,
-  FileTextOutlined,
-  FileOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
-
-// 图标映射，用于根据字符串图标名称获取对应组件
-const IconMap: Record<string, React.ReactNode> = {
-  HomeOutlined: <HomeOutlined />,
-  SettingOutlined: <SettingOutlined />,
-  UserOutlined: <UserOutlined />,
-  MenuOutlined: <MenuOutlined />,
-  TeamOutlined: <TeamOutlined />,
-  FileTextOutlined: <FileTextOutlined />,
-  FileOutlined: <FileOutlined />,
-  InfoCircleOutlined: <InfoCircleOutlined />,
-};
+import { MenuOutlined } from "@ant-design/icons";
+import * as Icons from "@ant-design/icons";
 
 const Sider = () => {
   const { menus, loadMenus } = useMenuStore();
@@ -45,7 +26,9 @@ const Sider = () => {
 
         const menuItem: any = {
           key: menu.id.toString(),
-          icon: menu.icon ? IconMap[menu.icon] || <MenuOutlined /> : <MenuOutlined />,
+          icon: menu.icon && (Icons as any)[menu.icon]
+            ? React.createElement((Icons as any)[menu.icon])
+            : <MenuOutlined />,
           label: isLeaf ? (
             <Link to={menu.path}>{menu.name}</Link>
           ) : (
