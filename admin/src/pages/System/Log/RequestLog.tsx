@@ -226,7 +226,7 @@ const RequestLogPage: React.FC = () => {
         showSearch={true}
         showToolbar={true}
         defaultExpandSearch={false}
-        toolbarExtra={
+        actionButtons={
           <Popconfirm title="确定清空所有日志？" description="此操作不可恢复" onConfirm={handleClear}>
             <Button danger icon={<ClearOutlined />}>
               清空日志
