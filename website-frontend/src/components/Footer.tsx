@@ -10,8 +10,8 @@ export default async function Footer() {
         {config?.footerInfo && (
           <div dangerouslySetInnerHTML={{ __html: config.footerInfo }} />
         )}
-        <p>© {new Date().getFullYear()} {config?.siteName || "官方网站"}. All rights reserved.</p>
-        {config?.icp && <p>{config.icp}</p>}
+        {/* <p>© {new Date().getFullYear()} {config?.siteName || "官方网站"}. All rights reserved.</p>
+        {config?.icp && <p>{config.icp}</p>} */}
       </div>
     </footer>
   );

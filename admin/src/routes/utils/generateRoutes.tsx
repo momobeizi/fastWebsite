@@ -20,6 +20,14 @@ const componentMap: Record<string, string> = {
   'RequestLog': '@/pages/System/Log/RequestLog',
   'DictType': '@/pages/System/Dict/DictType',
   'DictData': '@/pages/System/Dict/DictData',
+  'WebsiteConfig': '@/pages/Website/Config',
+  'WebsiteBanner': '@/pages/Website/Banner',
+  'WebsiteNav': '@/pages/Website/Nav',
+  'WebsiteArticleCategory': '@/pages/Website/ArticleCategory',
+  'WebsiteArticle': '@/pages/Website/Article',
+  'WebsiteProductCategory': '@/pages/Website/ProductCategory',
+  'WebsiteProduct': '@/pages/Website/Product',
+  'WebsitePage': '@/pages/Website/Page',
 };
 
 // 动态导入组件
@@ -63,6 +71,22 @@ const lazyImport = (component: string) => {
       return lazy(() => import('@/pages/System/Dict/DictType'));
     case '@/pages/System/Dict/DictData':
       return lazy(() => import('@/pages/System/Dict/DictData'));
+    case '@/pages/Website/Config':
+      return lazy(() => import('@/pages/Website/Config'));
+    case '@/pages/Website/Banner':
+      return lazy(() => import('@/pages/Website/Banner'));
+    case '@/pages/Website/Nav':
+      return lazy(() => import('@/pages/Website/Nav'));
+    case '@/pages/Website/ArticleCategory':
+      return lazy(() => import('@/pages/Website/ArticleCategory'));
+    case '@/pages/Website/Article':
+      return lazy(() => import('@/pages/Website/Article'));
+    case '@/pages/Website/ProductCategory':
+      return lazy(() => import('@/pages/Website/ProductCategory'));
+    case '@/pages/Website/Product':
+      return lazy(() => import('@/pages/Website/Product'));
+    case '@/pages/Website/Page':
+      return lazy(() => import('@/pages/Website/Page'));
     default:
       // 对于未预定义的组件，使用404
       return lazy(() => import('@/pages/System/Error/Page404'));
