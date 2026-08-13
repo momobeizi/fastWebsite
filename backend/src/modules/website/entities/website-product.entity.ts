@@ -32,4 +32,7 @@ export class WebsiteProduct extends BaseEntity {
 
   @Column({ type: 'int', default: 0, comment: '排序' })
   sort: number;
+
+  @Column({ type: 'json', nullable: true, comment: 'SKU列表' })
+  skus?: any[];
 }

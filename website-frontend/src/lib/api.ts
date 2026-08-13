@@ -62,6 +62,16 @@ export interface WebsiteArticle {
   createTime: string;
 }
 
+export interface SkuItem {
+  id: string;
+  name: string;
+  price: number;
+  image?: string;
+  stock?: number;
+  status: number;
+  content?: string;
+}
+
 export interface WebsiteProduct {
   id: number;
   name: string;
@@ -72,6 +82,7 @@ export interface WebsiteProduct {
   images?: string;
   categoryId: number;
   price?: number;
+  skus?: SkuItem[];
 }
 
 export interface WebsitePage {
