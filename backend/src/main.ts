@@ -1,5 +1,7 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 import { AppModule } from './app.module';
 import { swaggerConfig } from './config/swagger';
 import { ConfigService } from '@nestjs/config'
@@ -10,7 +12,11 @@ import { RequestLogInterceptor } from './modules/log/request-log.interceptor';
 
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  // 配置静态资源目录，用于访问上传的图片
+  app.useStaticAssets(join(process.cwd(), 'uploads'), {
+    prefix: '/uploads',
+  });
   app.setGlobalPrefix('api')
   // app.set('trust proxy', true); // 信任代理，使 req.ip 拿到真实 IP
   swaggerConfig(app); //初始化 swagger

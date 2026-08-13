@@ -1,4 +1,4 @@
-import { getProductBySlug } from "@/lib/api";
+import { getProductBySlug, resolveImageUrl } from "@/lib/api";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -23,12 +23,12 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div>
           {product.cover && (
-            <img src={product.cover} alt={product.name} className="w-full rounded-xl" />
+            <img src={resolveImageUrl(product.cover)} alt={product.name} className="w-full rounded-xl" />
           )}
           {images.length > 0 && (
             <div className="grid grid-cols-4 gap-2 mt-4">
               {images.map((img, i) => (
-                <img key={i} src={img} alt="" className="w-full rounded-lg" />
+                <img key={i} src={resolveImageUrl(img)} alt="" className="w-full rounded-lg" />
               ))}
             </div>
           )}

@@ -1,5 +1,21 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3000/api';
 
+// 后端服务地址（用于拼接上传的图片资源）
+const SERVER_BASE = process.env.NEXT_PUBLIC_SERVER_BASE || 'http://localhost:3000';
+
+/**
+ * 将图片地址转换为完整的可访问 URL
+ * 如果是以 /uploads 开头的相对路径，拼接后端服务地址
+ */
+export function resolveImageUrl(url?: string): string {
+  if (!url) return '';
+  // 已经是完整 URL 直接返回
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  // 相对路径拼接后端地址
+  if (url.startsWith('/')) return `${SERVER_BASE}${url}`;
+  return url;
+}
+
 export interface WebsiteConfig {
   siteName: string;
   logo?: string;

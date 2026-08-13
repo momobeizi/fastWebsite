@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getWebsiteConfig, getNavList, WebsiteNav } from "@/lib/api";
+import { getWebsiteConfig, getNavList, resolveImageUrl, WebsiteNav } from "@/lib/api";
 
 export default async function Header() {
   let config = null;
@@ -16,7 +16,7 @@ export default async function Header() {
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors">
           {config?.logo ? (
-            <img src={config.logo} alt={config.siteName} className="h-10" />
+            <img src={resolveImageUrl(config.logo)} alt={config.siteName} className="h-10" />
           ) : (
             config?.siteName || "官方网站"
           )}

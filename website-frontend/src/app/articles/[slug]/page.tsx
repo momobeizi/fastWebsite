@@ -1,4 +1,4 @@
-import { getArticleBySlug } from "@/lib/api";
+import { getArticleBySlug, resolveImageUrl } from "@/lib/api";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -35,7 +35,7 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
         )}
       </div>
       {article.cover && (
-        <img src={article.cover} alt={article.title} className="w-full rounded-xl mb-8" />
+        <img src={resolveImageUrl(article.cover)} alt={article.title} className="w-full rounded-xl mb-8" />
       )}
       {article.content && (
         <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: article.content }} />

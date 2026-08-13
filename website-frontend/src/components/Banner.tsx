@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { WebsiteBanner } from "@/lib/api";
+import { resolveImageUrl } from "@/lib/api";
 
 export default function Banner({ banners }: { banners: WebsiteBanner[] }) {
   const [current, setCurrent] = useState(0);
@@ -21,7 +22,7 @@ export default function Banner({ banners }: { banners: WebsiteBanner[] }) {
           key={b.id}
           className={`absolute inset-0 transition-opacity duration-700 ${i === current ? "opacity-100" : "opacity-0"}`}
         >
-          <img src={b.image} alt={b.title} className="w-full h-full object-cover" />
+          <img src={resolveImageUrl(b.image)} alt={b.title} className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/40" />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
             {b.title && <h2 className="text-4xl md:text-5xl font-bold mb-4">{b.title}</h2>}

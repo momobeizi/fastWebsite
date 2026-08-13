@@ -13,6 +13,7 @@ import { RoleModule } from './modules/role/role.module';
 import { LogModule } from './modules/log/log.module';
 import { DictModule } from './modules/dict/dict.module';
 import { WebsiteModule } from './modules/website/website.module';
+import { UploadModule } from './modules/upload/upload.module';
 import { AuthGuard } from './common/guards/auth.guard';
 
 @Module({
@@ -35,6 +36,7 @@ import { AuthGuard } from './common/guards/auth.guard';
     LogModule, // 请求日志模块
     DictModule, // 数据字典模块
     WebsiteModule, // 官网管理模块
+    UploadModule, // 文件上传模块
   ],
   controllers: [AppController],
   providers: [
