@@ -9,6 +9,7 @@ import { WebsiteArticleCategory } from './entities/website-article-category.enti
 import { WebsiteProduct } from './entities/website-product.entity';
 import { WebsiteProductCategory } from './entities/website-product-category.entity';
 import { WebsitePage } from './entities/website-page.entity';
+import { WebsiteContact } from './entities/website-contact.entity';
 import { paginateData } from 'src/common/utils/pagination';
 import { PaginateQuery } from 'nestjs-paginate';
 
@@ -23,6 +24,7 @@ export class WebsiteService {
     @InjectRepository(WebsiteProduct) private readonly productRepo: Repository<WebsiteProduct>,
     @InjectRepository(WebsiteProductCategory) private readonly productCatRepo: Repository<WebsiteProductCategory>,
     @InjectRepository(WebsitePage) private readonly pageRepo: Repository<WebsitePage>,
+    @InjectRepository(WebsiteContact) private readonly contactRepo: Repository<WebsiteContact>,
   ) {}
 
   // ========== 网站配置 ==========
@@ -145,4 +147,20 @@ export class WebsiteService {
   async addPage(dto: any) { return this.pageRepo.insert(dto); }
   async updatePage(dto: any) { const { id, ...data } = dto; return this.pageRepo.update(id, data); }
   async deletePage(id: number) { return this.pageRepo.delete(id); }
+
+  // ========== 联系人 ==========
+  async getContactList(query: PaginateQuery) {
+    return paginateData(query, this.contactRepo, {
+      sortableColumns: ['id', 'sort', 'createTime'],
+      searchableColumns: ['name', 'phone', 'wechat'],
+      defaultSortBy: [['sort', 'ASC']],
+    });
+  }
+  async getContactById(id: number) { return this.contactRepo.findOneBy({ id }); }
+  async getActiveContacts() {
+    return this.contactRepo.find({ where: { status: 1 }, order: { sort: 'ASC' } });
+  }
+  async addContact(dto: any) { return this.contactRepo.insert(dto); }
+  async updateContact(dto: any) { const { id, ...data } = dto; return this.contactRepo.update(id, data); }
+  async deleteContact(id: number) { return this.contactRepo.delete(id); }
 }

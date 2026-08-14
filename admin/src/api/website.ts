@@ -46,3 +46,11 @@ export const getPageApi = (id: number) => request.get(`/website/page/info/${id}`
 export const addPageApi = (data: any) => request.post("/website/page/add", data);
 export const updatePageApi = (data: any) => request.post("/website/page/update", data);
 export const deletePageApi = (id: number) => request.get(`/website/page/delete/${id}`);
+
+// ========== 联系人 ==========
+export const getContactListApi = (params?: any) => request.get("/website/contact/list", { params });
+export const getActiveContactsApi = () => request.get("/website/contact/active");
+export const getContactApi = (id: number) => request.get(`/website/contact/info/${id}`);
+export const addContactApi = (data: any) => request.post("/website/contact/add", data);
+export const updateContactApi = (data: any) => request.post("/website/contact/update", data);
+export const deleteContactApi = (id: number) => request.get(`/website/contact/delete/${id}`);

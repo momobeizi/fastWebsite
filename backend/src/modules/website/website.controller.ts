@@ -105,4 +105,29 @@ export class WebsiteController {
   updatePage(@Body() dto: any) { return this.websiteService.updatePage(dto); }
   @Get('/page/delete/:id')
   deletePage(@Param('id') id: number) { return this.websiteService.deletePage(id); }
+
+  // ========== 联系人 ==========
+  @ApiOperation({ summary: '联系人列表' })
+  @Get('/contact/list')
+  getContactList(@Paginate() query: PaginateQuery) { return this.websiteService.getContactList(query); }
+
+  @ApiOperation({ summary: '启用联系人列表' })
+  @Get('/contact/active')
+  getActiveContacts() { return this.websiteService.getActiveContacts(); }
+
+  @ApiOperation({ summary: '联系人详情' })
+  @Get('/contact/info/:id')
+  getContactById(@Param('id') id: number) { return this.websiteService.getContactById(id); }
+
+  @ApiOperation({ summary: '新增联系人' })
+  @Post('/contact/add')
+  addContact(@Body() dto: any) { return this.websiteService.addContact(dto); }
+
+  @ApiOperation({ summary: '更新联系人' })
+  @Post('/contact/update')
+  updateContact(@Body() dto: any) { return this.websiteService.updateContact(dto); }
+
+  @ApiOperation({ summary: '删除联系人' })
+  @Get('/contact/delete/:id')
+  deleteContact(@Param('id') id: number) { return this.websiteService.deleteContact(id); }
 }

@@ -28,6 +28,7 @@ const componentMap: Record<string, string> = {
   'WebsiteProductCategory': '@/pages/Website/ProductCategory',
   'WebsiteProduct': '@/pages/Website/Product',
   'WebsitePage': '@/pages/Website/Page',
+  'WebsiteContact': '@/pages/Website/Contact',
 };
 
 // 动态导入组件
@@ -87,6 +88,8 @@ const lazyImport = (component: string) => {
       return lazy(() => import('@/pages/Website/Product'));
     case '@/pages/Website/Page':
       return lazy(() => import('@/pages/Website/Page'));
+    case '@/pages/Website/Contact':
+      return lazy(() => import('@/pages/Website/Contact'));
     default:
       // 对于未预定义的组件，使用404
       return lazy(() => import('@/pages/System/Error/Page404'));

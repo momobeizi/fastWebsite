@@ -8,6 +8,7 @@ import { WebsiteArticleCategory } from './entities/website-article-category.enti
 import { WebsiteProduct } from './entities/website-product.entity';
 import { WebsiteProductCategory } from './entities/website-product-category.entity';
 import { WebsitePage } from './entities/website-page.entity';
+import { WebsiteContact } from './entities/website-contact.entity';
 import { WebsiteController } from './website.controller';
 import { WebsiteService } from './website.service';
 
@@ -17,7 +18,7 @@ import { WebsiteService } from './website.service';
       WebsiteConfig, WebsiteNav, WebsiteBanner,
       WebsiteArticle, WebsiteArticleCategory,
       WebsiteProduct, WebsiteProductCategory,
-      WebsitePage,
+      WebsitePage, WebsiteContact,
     ]),
   ],
   controllers: [WebsiteController],

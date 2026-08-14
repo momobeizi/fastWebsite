@@ -1,101 +1,23 @@
-/* RichEditor 暗夜模式样式 */
-.rich-editor-container.wang-editor-dark .w-e-toolbar {
-  background-color: #1f1f1f !important;
-  border-color: #3a3a3a !important;
+.rich-editor-wrapper {
+  width: 100%;
 }
 
-.rich-editor-container.wang-editor-dark .w-e-toolbar .w-e-menu {
-  color: #999 !important;
+.rich-editor-container {
+  width: 100%;
 }
 
-.rich-editor-container.wang-editor-dark .w-e-toolbar .w-e-menu:hover {
-  background-color: #2a2a2a !important;
+/* wangEditor 5 工具栏在弹窗内显示，需要设置 z-index 防止被遮挡 */
+.rich-editor-container .w-e-toolbar {
+  z-index: 100;
 }
 
-.rich-editor-container.wang-editor-dark .w-e-toolbar .w-e-menu:hover i {
-  color: #ccc !important;
+/* 编辑器内容区域 */
+.rich-editor-container .w-e-text-container {
+  z-index: 100;
 }
 
-.rich-editor-container.wang-editor-dark .w-e-text-container {
-  background-color: #1f1f1f !important;
-  border-color: #3a3a3a !important;
-}
-
-.rich-editor-container.wang-editor-dark .w-e-text {
-  background-color: #1f1f1f !important;
-  color: #e0e0e0 !important;
-}
-
-.rich-editor-container.wang-editor-dark .w-e-text::-webkit-scrollbar {
-  background-color: #1f1f1f !important;
-}
-
-.rich-editor-container.wang-editor-dark .w-e-text::-webkit-scrollbar-thumb {
-  background-color: #4a4a4a !important;
-}
-
-/* 下拉菜单暗夜模式 */
-.rich-editor-container.wang-editor-dark .w-e-panel-tab-content {
-  background-color: #1f1f1f !important;
-  color: #e0e0e0 !important;
-}
-
-.rich-editor-container.wang-editor-dark .w-e-panel-tab-header {
-  background-color: #2a2a2a !important;
-  border-color: #3a3a3a !important;
-}
-
-.rich-editor-container.wang-editor-dark .w-e-panel-tab-content input,
-.rich-editor-container.wang-editor-dark .w-e-panel-tab-content select {
-  background-color: #2a2a2a !important;
-  color: #e0e0e0 !important;
-  border-color: #4a4a4a !important;
-}
-
-/* 菜单按钮暗夜模式 */
-.rich-editor-container.wang-editor-dark .w-e-menu {
-  color: #999 !important;
-}
-
-.rich-editor-container.wang-editor-dark .w-e-menu:hover {
-  background-color: #2a2a2a !important;
-}
-
-/* 分割线暗夜模式 */
-.rich-editor-container.wang-editor-dark .w-e-toolbar hr,
-.rich-editor-container.wang-editor-dark .w-e-text-container hr {
-  border-color: #3a3a3a !important;
-}
-
-/* 文字选中暗夜模式 */
-.rich-editor-container.wang-editor-dark .w-e-text .placeholder {
-  color: #666 !important;
-}
-
-/* 弹窗菜单暗夜模式 */
-.rich-editor-container.wang-editor-dark .w-e-menu-panel {
-  background-color: #1f1f1f !important;
-}
-
-.rich-editor-container.wang-editor-dark .w-e-menu-panel h1,
-.rich-editor-container.wang-editor-dark .w-e-menu-panel h2,
-.rich-editor-container.wang-editor-dark .w-e-menu-panel h3,
-.rich-editor-container.wang-editor-dark .w-e-menu-panel h4,
-.rich-editor-container.wang-editor-dark .w-e-menu-panel h5,
-.rich-editor-container.wang-editor-dark .w-e-menu-panel p {
-  color: #e0e0e0 !important;
-}
-
-/* 下拉列表暗夜模式 */
-.rich-editor-container.wang-editor-dark .w-e-drop-list-item {
-  color: #e0e0e0 !important;
-}
-
-.rich-editor-container.wang-editor-dark .w-e-drop-list-item:hover {
-  background-color: #2a2a2a !important;
-}
-
-/* Tooltip 暗夜模式 */
-.rich-editor-container.wang-editor-dark .w-e-menu-tooltip {
-  color: #e0e0e0 !important;
+/* 下拉菜单层级 */
+.rich-editor-container .w-e-select-list,
+.rich-editor-container .w-e-drop-panel {
+  z-index: 200 !important;
 }

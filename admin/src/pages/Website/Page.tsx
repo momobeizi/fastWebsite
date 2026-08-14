@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Button, Tag, Space, message, Modal, Form, Input, Select, Popconfirm } from "antd";
+import { Button, Tag, Space, message, Modal, Form, Input, Select, Popconfirm, Tabs } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { TableList, type TableColumn } from "@/components/TableList";
 import { getPageListApi, getPageApi, addPageApi, updatePageApi, deletePageApi } from "@/api/website";
+import RichEditor from "@/components/RichEditor";
+import { useAuthStore } from "@/stores/modules/authStore";
 
 const PagePage: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -14,6 +16,7 @@ const PagePage: React.FC = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [form] = Form.useForm();
+  const token = useAuthStore((state) => state.token);
 
   useEffect(() => { getList(); }, []);
 
@@ -89,24 +92,50 @@ const PagePage: React.FC = () => {
         searchFields={searchFields} onSearch={handleSearch} onReset={() => { setSearchParams({}); getList(); }}
         onPageChange={(p, ps) => { setPagination(prev => ({ ...prev, current: p, pageSize: ps })); getList(); }}
         onAdd={handleAdd} showSearch={true} showToolbar={true} defaultExpandSearch={false} />
-      <Modal title={isEdit ? "编辑页面" : "新增页面"} open={modalVisible} onOk={handleSave} onCancel={() => setModalVisible(false)} confirmLoading={modalLoading} width={700}>
+      <Modal title={isEdit ? "编辑页面" : "新增页面"} open={modalVisible} onOk={handleSave} onCancel={() => setModalVisible(false)} confirmLoading={modalLoading} width={900}>
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
-          <Form.Item name="title" label="页面标题" rules={[{ required: true }]}><Input /></Form.Item>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
-            <Form.Item name="slug" label="URL" rules={[{ required: true }]}><Input placeholder="如：about" /></Form.Item>
-            <Form.Item name="type" label="页面类型" rules={[{ required: true }]}>
-              <Select options={[
-                { label: "关于我们", value: "about" }, { label: "联系我们", value: "contact" },
-                { label: "常见问题", value: "faq" }, { label: "加入我们", value: "join" },
-                { label: "其他", value: "other" },
-              ]} />
-            </Form.Item>
-          </div>
-          <Form.Item name="status" label="状态"><Select options={[{ label: "已发布", value: 1 }, { label: "草稿", value: 0 }]} /></Form.Item>
-          <Form.Item name="content" label="页面内容(HTML)"><Input.TextArea rows={10} placeholder="支持HTML" /></Form.Item>
-          <Form.Item name="seoTitle" label="SEO标题"><Input /></Form.Item>
-          <Form.Item name="seoKeywords" label="SEO关键词"><Input /></Form.Item>
-          <Form.Item name="seoDescription" label="SEO描述"><Input.TextArea rows={2} /></Form.Item>
+          <Tabs
+            defaultActiveKey="info"
+            items={[
+              {
+                key: "info",
+                label: "基础信息",
+                children: (
+                  <>
+                    <Form.Item name="title" label="页面标题" rules={[{ required: true }]}><Input /></Form.Item>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
+                      <Form.Item name="slug" label="URL" rules={[{ required: true }]}><Input placeholder="如：about" /></Form.Item>
+                      <Form.Item name="type" label="页面类型" rules={[{ required: true }]}>
+                        <Select options={[
+                          { label: "关于我们", value: "about" }, { label: "联系我们", value: "contact" },
+                          { label: "常见问题", value: "faq" }, { label: "加入我们", value: "join" },
+                          { label: "其他", value: "other" },
+                        ]} />
+                      </Form.Item>
+                    </div>
+                    <Form.Item name="status" label="状态"><Select options={[{ label: "已发布", value: 1 }, { label: "草稿", value: 0 }]} /></Form.Item>
+                    <Form.Item name="seoTitle" label="SEO标题"><Input /></Form.Item>
+                    <Form.Item name="seoKeywords" label="SEO关键词"><Input /></Form.Item>
+                    <Form.Item name="seoDescription" label="SEO描述"><Input.TextArea rows={2} /></Form.Item>
+                  </>
+                ),
+              },
+              {
+                key: "content",
+                label: "页面内容",
+                children: (
+                  <Form.Item name="content" label="页面内容">
+                    <RichEditor
+                      value={form.getFieldValue("content") || ""}
+                      onChange={(html) => form.setFieldValue("content", html)}
+                      height={400}
+                      token={token}
+                    />
+                  </Form.Item>
+                ),
+              },
+            ]}
+          />
         </Form>
       </Modal>
     </>

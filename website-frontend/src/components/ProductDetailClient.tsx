@@ -1,7 +1,8 @@
 "use client";
 import { useState, useMemo } from "react";
-import { resolveImageUrl, type WebsiteProduct, type SkuItem } from "@/lib/api";
+import { resolveImageUrl, unescapeHtml, type WebsiteProduct, type SkuItem } from "@/lib/api";
 import ProductGallery from "@/components/ProductGallery";
+import ContactModal from "@/components/ContactModal";
 
 export default function ProductDetailClient({ product }: { product: WebsiteProduct }) {
   const skus: SkuItem[] = product.skus || [];
@@ -89,14 +90,9 @@ export default function ProductDetailClient({ product }: { product: WebsiteProdu
             </div>
           )}
 
-          {/* 操作按钮 */}
-          <div className="mt-8 flex gap-4">
-            <button className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-full transition-colors">
-              立即购买
-            </button>
-            <button className="px-8 py-3 border-2 border-gray-200 hover:border-red-600 hover:text-red-600 text-gray-700 font-medium rounded-full transition-colors">
-              加入购物车
-            </button>
+          {/* 联系工作人员 */}
+          <div className="mt-8">
+            <ContactModal />
           </div>
         </div>
       </div>
@@ -111,7 +107,7 @@ export default function ProductDetailClient({ product }: { product: WebsiteProdu
           </div>
           <div
             className="prose prose-lg max-w-none mt-8 [&_img]:rounded-xl [&_img]:mx-auto"
-            dangerouslySetInnerHTML={{ __html: currentContent }}
+            dangerouslySetInnerHTML={{ __html: unescapeHtml(currentContent) }}
           />
         </div>
       )}

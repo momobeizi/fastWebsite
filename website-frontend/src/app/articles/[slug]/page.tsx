@@ -1,4 +1,4 @@
-import { getArticleBySlug, resolveImageUrl } from "@/lib/api";
+import { getArticleBySlug, resolveImageUrl, unescapeHtml } from "@/lib/api";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -38,7 +38,7 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
         <img src={resolveImageUrl(article.cover)} alt={article.title} className="w-full rounded-xl mb-8" />
       )}
       {article.content && (
-        <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: article.content }} />
+        <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: unescapeHtml(article.content) }} />
       )}
     </article>
   );

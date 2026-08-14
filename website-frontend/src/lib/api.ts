@@ -16,6 +16,19 @@ export function resolveImageUrl(url?: string): string {
   return url;
 }
 
+/**
+ * 将 HTML 实体反转义（富文本内容可能被转义存储）
+ */
+export function unescapeHtml(html?: string): string {
+  if (!html) return '';
+  return html
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, '&');
+}
+
 export interface WebsiteConfig {
   siteName: string;
   logo?: string;
@@ -96,6 +109,17 @@ export interface WebsitePage {
   seoDescription?: string;
 }
 
+export interface WebsiteContact {
+  id: number;
+  name: string;
+  phone: string;
+  wechat?: string;
+  title?: string;
+  avatar?: string;
+  sort: number;
+  status: number;
+}
+
 async function fetchApi<T>(path: string): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, { next: { revalidate: 60 } });
   if (!res.ok) throw new Error(`API error: ${res.status}`);
@@ -132,3 +156,7 @@ export const getProductBySlug = (slug: string) =>
 // 单页面
 export const getPageBySlug = (slug: string) =>
   fetchApi<WebsitePage>(`/website/page/slug/${slug}`);
+
+// 启用联系人列表
+export const getActiveContacts = () =>
+  fetchApi<WebsiteContact[]>('/website/contact/active');

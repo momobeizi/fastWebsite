@@ -1,4 +1,4 @@
-import { getPageBySlug } from "@/lib/api";
+import { getPageBySlug, unescapeHtml } from "@/lib/api";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -24,7 +24,7 @@ export default async function CustomPage({ params }: { params: Promise<{ slug: s
     <div className="max-w-4xl mx-auto px-4 py-16">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">{page.title}</h1>
       {page.content && (
-        <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: page.content }} />
+        <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: unescapeHtml(page.content) }} />
       )}
     </div>
   );
