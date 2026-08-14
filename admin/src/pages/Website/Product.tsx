@@ -123,7 +123,15 @@ const ProductPage: React.FC = () => {
         searchFields={searchFields} onSearch={handleSearch} onReset={() => { setSearchParams({}); getList(); }}
         onPageChange={(p, ps) => { setPagination(prev => ({ ...prev, current: p, pageSize: ps })); getList(); }}
         onAdd={handleAdd} showSearch={true} showToolbar={true} defaultExpandSearch={false} />
-      <Modal title={isEdit ? "编辑产品" : "新增产品"} open={modalVisible} onOk={handleSave} onCancel={() => setModalVisible(false)} confirmLoading={modalLoading} width={900}>
+      <Modal
+        title={isEdit ? "编辑产品" : "新增产品"}
+        open={modalVisible}
+        onOk={handleSave}
+        onCancel={() => setModalVisible(false)}
+        confirmLoading={modalLoading}
+        width={900}
+        styles={{ body: { overflow: 'visible' }, content: { overflow: 'visible' } }}
+      >
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
           <Tabs
             defaultActiveKey="info"
