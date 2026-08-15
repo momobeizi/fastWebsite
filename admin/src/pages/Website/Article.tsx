@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Button, Tag, Space, message, Modal, Form, Input, Select, InputNumber, DatePicker, Popconfirm, Switch } from "antd";
-import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Tag, Space, message, Modal, Form, Input, Select, InputNumber, DatePicker, Popconfirm, Switch, Tabs, Upload } from "antd";
+import { EditOutlined, DeleteOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import ImagePreview from "@/components/ImagePreview";
 import { TableList, type TableColumn } from "@/components/TableList";
 import { getArticleListApi, getArticleApi, addArticleApi, updateArticleApi, deleteArticleApi } from "@/api/website";
 import { getArticleCategoryListApi } from "@/api/website";
 import dayjs from "dayjs";
+import RichEditor from "@/components/RichEditor";
+import { useAuthStore } from "@/stores/modules/authStore";
 
 const ArticlePage: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -17,6 +20,7 @@ const ArticlePage: React.FC = () => {
   const [editId, setEditId] = useState<number | null>(null);
   const [categories, setCategories] = useState<any[]>([]);
   const [form] = Form.useForm();
+  const token = useAuthStore((state) => state.token);
 
   useEffect(() => { getList(); loadCategories(); }, []);
 
@@ -69,6 +73,23 @@ const ArticlePage: React.FC = () => {
     finally { setModalLoading(false); }
   };
 
+  // 封面上传配置
+  const uploadProps = {
+    name: "file",
+    action: "/api/common/uploadFile",
+    headers: { Authorization: `Bearer ${token || ""}` },
+    showUploadList: false,
+    onChange(info: any) {
+      if (info.file.status === "done") {
+        const url = info.file.response?.data || info.file.response;
+        form.setFieldValue("cover", url);
+        message.success("上传成功");
+      } else if (info.file.status === "error") {
+        message.error("上传失败");
+      }
+    },
+  };
+
   const columns: TableColumn<any>[] = [
     { title: "序号", dataIndex: "index", width: 50, align: "center", render: (_v, _r, i) => i + 1 },
     { title: "标题", dataIndex: "title", width: 200, ellipsis: true },
@@ -95,26 +116,78 @@ const ArticlePage: React.FC = () => {
         searchFields={searchFields} onSearch={handleSearch} onReset={() => { setSearchParams({}); getList(); }}
         onPageChange={(p, ps) => { setPagination(prev => ({ ...prev, current: p, pageSize: ps })); getList(); }}
         onAdd={handleAdd} showSearch={true} showToolbar={true} defaultExpandSearch={false} />
-      <Modal title={isEdit ? "编辑文章" : "新增文章"} open={modalVisible} onOk={handleSave} onCancel={() => setModalVisible(false)} confirmLoading={modalLoading} width={700}>
+      <Modal
+        title={isEdit ? "编辑文章" : "新增文章"}
+        open={modalVisible}
+        onOk={handleSave}
+        onCancel={() => setModalVisible(false)}
+        confirmLoading={modalLoading}
+        width={1200}
+        styles={{ body: { overflow: 'visible' }, content: { overflow: 'visible' } }}
+      >
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
-          <Form.Item name="title" label="标题" rules={[{ required: true }]}><Input /></Form.Item>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
-            <Form.Item name="slug" label="SEO URL" rules={[{ required: true }]}><Input placeholder="如：company-news-2024" /></Form.Item>
-            <Form.Item name="categoryId" label="分类" rules={[{ required: true }]}>
-              <Select options={categories.map(c => ({ label: c.name, value: c.id }))} />
-            </Form.Item>
-          </div>
-          <Form.Item name="cover" label="封面图"><Input placeholder="图片URL" /></Form.Item>
-          <Form.Item name="summary" label="摘要"><Input.TextArea rows={3} /></Form.Item>
-          <Form.Item name="content" label="内容(HTML)"><Input.TextArea rows={8} placeholder="支持HTML" /></Form.Item>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0 16px" }}>
-            <Form.Item name="tags" label="标签"><Input placeholder="逗号分隔" /></Form.Item>
-            <Form.Item name="status" label="状态"><Select options={[{ label: "已发布", value: 1 }, { label: "草稿", value: 0 }]} /></Form.Item>
-            <Form.Item name="publishTime" label="发布时间"><DatePicker showTime style={{ width: "100%" }} /></Form.Item>
-          </div>
-          <Form.Item name="seoTitle" label="SEO标题"><Input /></Form.Item>
-          <Form.Item name="seoKeywords" label="SEO关键词"><Input /></Form.Item>
-          <Form.Item name="seoDescription" label="SEO描述"><Input.TextArea rows={2} /></Form.Item>
+          <Tabs
+            defaultActiveKey="info"
+            items={[
+              {
+                key: "info",
+                label: "基础信息",
+                children: (
+                  <>
+                    <Form.Item name="title" label="标题" rules={[{ required: true }]}><Input /></Form.Item>
+                    {/* 第一行：SEO URL、分类、标签 */}
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0 16px" }}>
+                      <Form.Item name="slug" label="SEO URL" rules={[{ required: true }]}><Input placeholder="如：company-news-2024" /></Form.Item>
+                      <Form.Item name="categoryId" label="分类" rules={[{ required: true }]}>
+                        <Select options={categories.map(c => ({ label: c.name, value: c.id }))} />
+                      </Form.Item>
+                      <Form.Item name="tags" label="标签"><Input placeholder="逗号分隔" /></Form.Item>
+                    </div>
+                    {/* 第二行：封面图、状态、发布时间 */}
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0 16px" }}>
+                      <Form.Item name="cover" label="封面图">
+                        <div>
+                          <Upload {...uploadProps}>
+                            <Button icon={<UploadOutlined />} size="small">上传封面</Button>
+                          </Upload>
+                          <Form.Item noStyle shouldUpdate>
+                            {({ getFieldValue }) => {
+                              const url = getFieldValue("cover");
+                              return url ? (
+                                <div style={{ marginTop: 8 }}>
+                                  <ImagePreview src={url} width={80} height={60} />
+                                </div>
+                              ) : null;
+                            }}
+                          </Form.Item>
+                        </div>
+                      </Form.Item>
+                      <Form.Item name="status" label="状态"><Select options={[{ label: "已发布", value: 1 }, { label: "草稿", value: 0 }]} /></Form.Item>
+                      <Form.Item name="publishTime" label="发布时间"><DatePicker showTime style={{ width: "100%" }} /></Form.Item>
+                    </div>
+                    <Form.Item name="summary" label="摘要"><Input.TextArea rows={3} /></Form.Item>
+                    <Form.Item name="seoTitle" label="SEO标题"><Input /></Form.Item>
+                    <Form.Item name="seoKeywords" label="SEO关键词"><Input /></Form.Item>
+                    <Form.Item name="seoDescription" label="SEO描述"><Input.TextArea rows={2} /></Form.Item>
+                  </>
+                ),
+              },
+              {
+                key: "content",
+                label: "文章内容",
+                children: (
+                  <Form.Item name="content" label="文章内容">
+                    <RichEditor
+                      value={form.getFieldValue("content") || ""}
+                      onChange={(html) => form.setFieldValue("content", html)}
+                      height={450}
+                      token={token}
+                    />
+                  </Form.Item>
+                ),
+              },
+            ]}
+          />
         </Form>
       </Modal>
     </>
