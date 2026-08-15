@@ -11,15 +11,23 @@ export default async function ArticlesPage() {
   } catch {}
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-bold text-gray-900 mb-10 text-center">新闻动态</h1>
-      {articles.length === 0 ? (
-        <p className="text-center text-gray-500">暂无文章</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {articles.map(a => <ArticleCard key={a.id} article={a} />)}
+    <div>
+      <div className="page-hero">
+        <div className="container">
+          <p className="eyebrow">NEWS</p>
+          <h1>文章</h1>
+          <p className="lead">这里记录我们的最新动态与行业洞察。</p>
         </div>
-      )}
+      </div>
+      <div className="container" style={{ padding: "56px 0 88px" }}>
+        {articles.length === 0 ? (
+          <p className="muted" style={{ textAlign: "center" }}>暂无文章</p>
+        ) : (
+          <div className="article-grid">
+            {articles.map((a, i) => <ArticleCard key={a.id} article={a} index={i + 1} />)}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

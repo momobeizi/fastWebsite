@@ -1,4 +1,4 @@
-import { getBanners, getArticleList, getProductList } from "@/lib/api";
+import { getBanners, getArticleList, getProductList, getWebsiteConfig } from "@/lib/api";
 import Banner from "@/components/Banner";
 import ArticleCard from "@/components/ArticleCard";
 import ProductCard from "@/components/ProductCard";
@@ -8,6 +8,7 @@ export default async function HomePage() {
   let banners: any[] = [];
   let articles: any[] = [];
   let products: any[] = [];
+  let config: any = null;
 
   try {
     const bannerRes = await getBanners("home");
@@ -24,37 +25,75 @@ export default async function HomePage() {
     products = (productRes as any)?.list || [];
   } catch {}
 
+  try {
+    config = await getWebsiteConfig();
+  } catch {}
+
+  const siteName = config?.siteName || "官方网站";
+  const brandChar = siteName.charAt(0);
+
   return (
     <>
-      <Banner banners={banners} />
+      {/* Hero */}
+      <section className="hero">
+        <div className="container hero-grid">
+          <div>
+            <p className="eyebrow">OFFICIAL · 2026</p>
+            <h1 className="hero-title">{siteName}</h1>
+            <p className="hero-lead">
+              {config?.seoDescription || "专注产品与服务，为客户提供卓越的解决方案。"}
+            </p>
+            <div className="hero-actions">
+              <a className="btn btn-primary" href="/products">浏览产品</a>
+              <a className="btn btn-ghost" href="/articles">阅读资讯</a>
+            </div>
+            {articles.length > 0 && (
+              <div className="hero-meta">
+                <span className="meta-chip">最新动态</span>
+                <span className="meta-chip">{articles.length} 篇文章</span>
+              </div>
+            )}
+          </div>
+
+          {banners.length > 0 && (
+            <aside className="hero-readme" aria-label="轮播展示">
+              <Banner banners={banners} />
+            </aside>
+          )}
+        </div>
+      </section>
 
       {/* 产品展示 */}
       {products.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 py-20">
-          <div className="flex items-center justify-between mb-10">
-            <h2 className="text-3xl font-bold text-gray-900">产品展示</h2>
-            <Link href="/products" className="text-blue-600 hover:text-blue-700 font-medium">
-              查看全部 →
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map(p => <ProductCard key={p.id} product={p} />)}
+        <section className="section">
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <p className="section-kicker eyebrow">PRODUCTS</p>
+                <h2>产品展示</h2>
+              </div>
+              <Link className="section-link" href="/products">全部产品 →</Link>
+            </div>
+            <div className="product-grid">
+              {products.map(p => <ProductCard key={p.id} product={p} />)}
+            </div>
           </div>
         </section>
       )}
 
       {/* 文章列表 */}
       {articles.length > 0 && (
-        <section className="bg-gray-50 py-20">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="flex items-center justify-between mb-10">
-              <h2 className="text-3xl font-bold text-gray-900">新闻动态</h2>
-              <Link href="/articles" className="text-blue-600 hover:text-blue-700 font-medium">
-                查看全部 →
-              </Link>
+        <section className="section">
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <p className="section-kicker eyebrow">NEWS</p>
+                <h2>文章</h2>
+              </div>
+              <Link className="section-link" href="/articles">全部文章 →</Link>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {articles.map(a => <ArticleCard key={a.id} article={a} />)}
+            <div className="article-grid">
+              {articles.map((a, i) => <ArticleCard key={a.id} article={a} index={i + 1} />)}
             </div>
           </div>
         </section>

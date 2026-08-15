@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, message, Card, Spin, Tabs } from "antd";
-import { SaveOutlined } from "@ant-design/icons";
+import { Form, Input, Button, message, Card, Spin, Upload } from "antd";
+import { SaveOutlined, UploadOutlined } from "@ant-design/icons";
 import { getWebsiteConfigApi, saveWebsiteConfigApi } from "@/api/website";
+import ImagePreview from "@/components/ImagePreview";
+import { useAuthStore } from "@/stores/modules/authStore";
 
 const ConfigPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form] = Form.useForm();
+  const token = useAuthStore((state) => state.token);
 
   useEffect(() => { loadConfig(); }, []);
 
@@ -31,6 +34,23 @@ const ConfigPage: React.FC = () => {
     finally { setSaving(false); }
   };
 
+  // 上传配置（根据字段名区分 logo / favicon）
+  const makeUploadProps = (field: string) => ({
+    name: "file",
+    action: "/api/common/uploadFile",
+    headers: { Authorization: `Bearer ${token || ""}` },
+    showUploadList: false,
+    onChange(info: any) {
+      if (info.file.status === "done") {
+        const url = info.file.response?.data || info.file.response;
+        form.setFieldValue(field, url);
+        message.success("上传成功");
+      } else if (info.file.status === "error") {
+        message.error("上传失败");
+      }
+    },
+  });
+
   if (loading) return <div style={{ textAlign: "center", padding: 100 }}><Spin size="large" /></div>;
 
   return (
@@ -42,13 +62,43 @@ const ConfigPage: React.FC = () => {
             <Form.Item name="siteName" label="网站名称" rules={[{ required: true }]}>
               <Input placeholder="如：某某科技有限公司" />
             </Form.Item>
-            <Form.Item name="logo" label="Logo地址">
-              <Input placeholder="图片URL" />
+            <Form.Item name="logo" label="Logo">
+              <div>
+                <Upload {...makeUploadProps("logo")}>
+                  <Button icon={<UploadOutlined />} size="small">上传Logo</Button>
+                </Upload>
+                <Form.Item noStyle shouldUpdate>
+                  {({ getFieldValue }) => {
+                    const url = getFieldValue("logo");
+                    return url ? (
+                      <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 12 }}>
+                        <ImagePreview src={url} width={80} height={50} />
+                        <span style={{ fontSize: 12, color: "#999", wordBreak: "break-all" }}>{url}</span>
+                      </div>
+                    ) : null;
+                  }}
+                </Form.Item>
+              </div>
             </Form.Item>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 24px" }}>
             <Form.Item name="favicon" label="网站图标(favicon)">
-              <Input placeholder="图片URL" />
+              <div>
+                <Upload {...makeUploadProps("favicon")}>
+                  <Button icon={<UploadOutlined />} size="small">上传图标</Button>
+                </Upload>
+                <Form.Item noStyle shouldUpdate>
+                  {({ getFieldValue }) => {
+                    const url = getFieldValue("favicon");
+                    return url ? (
+                      <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 12 }}>
+                        <ImagePreview src={url} width={50} height={50} />
+                        <span style={{ fontSize: 12, color: "#999", wordBreak: "break-all" }}>{url}</span>
+                      </div>
+                    ) : null;
+                  }}
+                </Form.Item>
+              </div>
             </Form.Item>
             <Form.Item name="icp" label="ICP备案号">
               <Input placeholder="如：粤ICP备xxxxxx号" />

@@ -3,7 +3,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { getWebsiteConfig } from "@/lib/api";
+import { getWebsiteConfig, resolveImageUrl } from "@/lib/api";
 
 const geistSans = Geist({ subsets: ["latin"] });
 
@@ -14,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: { default: config.seoTitle || config.siteName, template: `%s | ${config.siteName}` },
       description: config.seoDescription || "",
       keywords: config.seoKeywords || "",
+      icons: config.favicon ? { icon: resolveImageUrl(config.favicon) } : undefined,
     };
   } catch {
     return { title: "官方网站" };
@@ -23,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="zh-CN" className={`${geistSans.className} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-white text-gray-900">
+      <body className="min-h-full flex flex-col">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

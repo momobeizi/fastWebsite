@@ -11,15 +11,23 @@ export default async function ProductsPage() {
   } catch {}
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-bold text-gray-900 mb-10 text-center">产品展示</h1>
-      {products.length === 0 ? (
-        <p className="text-center text-gray-500">暂无产品</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map(p => <ProductCard key={p.id} product={p} />)}
+    <div>
+      <div className="page-hero">
+        <div className="container">
+          <p className="eyebrow">PRODUCTS</p>
+          <h1>产品展示</h1>
+          <p className="lead">精选优质产品，满足您的多样化需求。</p>
         </div>
-      )}
+      </div>
+      <div className="container" style={{ padding: "56px 0 88px" }}>
+        {products.length === 0 ? (
+          <p className="muted" style={{ textAlign: "center" }}>暂无产品</p>
+        ) : (
+          <div className="product-grid">
+            {products.map(p => <ProductCard key={p.id} product={p} />)}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

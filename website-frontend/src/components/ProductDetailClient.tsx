@@ -16,72 +16,65 @@ export default function ProductDetailClient({ product }: { product: WebsiteProdu
   const images: string[] = product.images ? JSON.parse(product.images) : [];
   const gallery = images.length > 0 ? images : (product.cover ? [product.cover] : []);
 
-  // 当前展示价格：优先 SKU 价格，否则产品价格
   const currentPrice = activeSku ? activeSku.price : (product.price ?? 0);
-  // 当前详情：优先 SKU 详情，否则产品详情
   const currentContent = activeSku?.content || product.content || "";
 
   return (
-    <div className="bg-white">
+    <div>
       {/* 面包屑 */}
-      <div className="max-w-7xl mx-auto px-4 pt-6 text-sm text-gray-500">
-        <a href="/" className="hover:text-blue-600">首页</a>
-        <span className="mx-2">/</span>
-        <a href="/products" className="hover:text-blue-600">产品</a>
-        <span className="mx-2">/</span>
-        <span className="text-gray-900">{product.name}</span>
+      <div className="container" style={{ paddingTop: 24 }}>
+        <nav className="breadcrumb">
+          <a href="/">首页</a>
+          <span>/</span>
+          <a href="/products">产品</a>
+          <span>/</span>
+          <span>{product.name}</span>
+        </nav>
       </div>
 
-      {/* 商品主区域 */}
-      <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-2 gap-12">
+      {/* 产品主区域 */}
+      <div className="container product-detail-grid" style={{ padding: "40px 0 72px" }}>
         {/* 左侧：图片画廊 */}
         <div>
           {gallery.length > 0 ? (
             <ProductGallery images={gallery} />
           ) : (
-            <div className="aspect-square rounded-2xl bg-gray-100 flex items-center justify-center text-gray-400">
+            <div style={{ aspectRatio: "1 / 1", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--muted)", background: "var(--ink-softer)" }}>
               暂无图片
             </div>
           )}
         </div>
 
-        {/* 右侧：商品信息 */}
-        <div className="flex flex-col">
-          <h1 className="text-3xl font-bold text-gray-900">
+        {/* 右侧：产品信息 */}
+        <div>
+          <h1 style={{ fontSize: "clamp(32px, 4vw, 48px)", margin: "0 0 16px" }}>
             {product.name}
-            {activeSku && <span className="ml-2 text-lg text-gray-400">{activeSku.name}</span>}
+            {activeSku && <span style={{ marginLeft: 12, fontSize: "0.5em", color: "var(--muted)" }}>{activeSku.name}</span>}
           </h1>
 
-          {/* 价格区 */}
-          <div className="mt-6 bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl p-6">
-            <div className="text-sm text-gray-500">价格</div>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-4xl font-bold text-red-600">¥{currentPrice}</span>
-              {currentPrice != null && currentPrice > 0 && (
-                <span className="text-sm text-gray-400 line-through">¥{(currentPrice * 1.2).toFixed(2)}</span>
-              )}
+          {/* 价格 */}
+          <div style={{ border: "1px solid var(--border)", background: "var(--surface)", padding: "20px 24px", marginBottom: 24 }}>
+            <div className="eyebrow" style={{ marginBottom: 8 }}>PRICE</div>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
+              <span style={{ fontSize: 40, fontWeight: 700, color: "var(--accent-strong)", fontFamily: "var(--font-mono)" }}>¥{currentPrice}</span>
             </div>
             {activeSku?.stock != null && (
-              <div className="mt-2 text-sm text-gray-500">
-                库存：<span className={activeSku.stock > 0 ? "text-green-600" : "text-red-500"}>{activeSku.stock > 0 ? activeSku.stock : "缺货"}</span>
+              <div style={{ marginTop: 8, fontSize: 14, color: "var(--muted)", fontFamily: "var(--font-mono)" }}>
+                库存：<span style={{ color: activeSku.stock > 0 ? "var(--fg)" : "var(--accent)" }}>{activeSku.stock > 0 ? activeSku.stock : "缺货"}</span>
               </div>
             )}
           </div>
 
           {/* SKU 选择 */}
           {skus.length > 0 && (
-            <div className="mt-6">
-              <div className="text-sm text-gray-500 mb-3">选择规格</div>
-              <div className="flex flex-wrap gap-3">
+            <div style={{ marginBottom: 24 }}>
+              <div className="eyebrow" style={{ marginBottom: 12 }}>选择规格</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
                 {skus.filter(s => s.status === 1).map(sku => (
                   <button
                     key={sku.id}
                     onClick={() => setActiveSkuId(sku.id)}
-                    className={`px-5 py-2 rounded-lg border-2 text-sm font-medium transition-all ${
-                      activeSkuId === sku.id
-                        ? "border-red-600 text-red-600 bg-red-50"
-                        : "border-gray-200 text-gray-700 hover:border-red-300"
-                    }`}
+                    className={`sku-btn ${activeSkuId === sku.id ? "is-active" : ""}`}
                   >
                     {sku.name}
                   </button>
@@ -91,24 +84,28 @@ export default function ProductDetailClient({ product }: { product: WebsiteProdu
           )}
 
           {/* 联系工作人员 */}
-          <div className="mt-8">
+          <div style={{ maxWidth: 320 }}>
             <ContactModal />
           </div>
         </div>
       </div>
 
-      {/* 详情 Tab */}
+      {/* 产品详情 */}
       {currentContent && (
-        <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="border-b border-gray-200">
-            <span className="inline-block px-6 py-3 text-lg font-semibold text-blue-600 border-b-2 border-blue-600">
-              产品详情
-            </span>
+        <div className="section" style={{ borderTop: "1px solid var(--border)" }}>
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <p className="section-kicker eyebrow">DETAILS</p>
+                <h2>产品详情</h2>
+              </div>
+            </div>
+            <div
+              className="prose"
+              style={{ maxWidth: "none" }}
+              dangerouslySetInnerHTML={{ __html: unescapeHtml(currentContent) }}
+            />
           </div>
-          <div
-            className="prose prose-lg max-w-none mt-8 [&_img]:rounded-xl [&_img]:mx-auto"
-            dangerouslySetInnerHTML={{ __html: unescapeHtml(currentContent) }}
-          />
         </div>
       )}
     </div>

@@ -17,42 +17,43 @@ export default function ContactModal() {
 
   return (
     <>
-      <button
-        onClick={() => setVisible(true)}
-        className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-full transition-colors"
-      >
+      <button className="btn btn-primary" style={{ width: "100%" }} onClick={() => setVisible(true)}>
         联系工作人员
       </button>
 
       {visible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setVisible(false)}>
+        <div
+          style={{ position: "fixed", inset: 0, zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.5)" }}
+          onClick={() => setVisible(false)}
+        >
           <div
-            className="bg-white rounded-2xl w-[420px] max-w-[90vw] p-6"
+            style={{ width: 420, maxWidth: "90vw", background: "var(--surface)", border: "1px solid var(--border)", padding: 24 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg font-semibold text-gray-900">联系工作人员</h3>
-              <button onClick={() => setVisible(false)} className="text-gray-400 hover:text-gray-600 text-xl leading-none">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+              <h3 style={{ margin: 0, fontSize: 20 }}>联系工作人员</h3>
+              <button onClick={() => setVisible(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 22, color: "var(--muted)" }}>
                 ×
               </button>
             </div>
 
             {contacts.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">暂无联系人信息</p>
+              <p style={{ textAlign: "center", color: "var(--muted)", padding: "32px 0" }}>暂无联系人信息</p>
             ) : (
-              <div className="space-y-3">
+              <div style={{ display: "grid", gap: 12 }}>
                 {contacts.map(c => (
-                  <div key={c.id} className="flex items-center gap-4 p-4 rounded-xl bg-gray-50">
-                    <div className="flex-1">
-                      <div className="font-medium text-gray-900">
+                  <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 16, padding: 16, border: "1px solid var(--border)" }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 650, color: "var(--fg)" }}>
                         {c.name}
-                        {c.title && <span className="ml-2 text-sm text-gray-500">{c.title}</span>}
+                        {c.title && <span style={{ marginLeft: 8, fontSize: 13, color: "var(--muted)" }}>{c.title}</span>}
                       </div>
-                      {c.wechat && <div className="text-sm text-gray-500 mt-1">微信：{c.wechat}</div>}
+                      {c.wechat && <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 4, fontFamily: "var(--font-mono)" }}>微信：{c.wechat}</div>}
                     </div>
                     <button
                       onClick={() => call(c.phone)}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-full transition-colors whitespace-nowrap"
+                      className="btn btn-ghost btn-sm"
+                      style={{ whiteSpace: "nowrap" }}
                     >
                       拨打电话
                     </button>

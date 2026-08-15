@@ -15,37 +15,42 @@ export default function Banner({ banners }: { banners: WebsiteBanner[] }) {
 
   if (!banners.length) return null;
 
+  const b = banners[current];
+
   return (
-    <section className="relative w-full h-[500px] overflow-hidden bg-gray-900">
-      {banners.map((b, i) => (
-        <div
-          key={b.id}
-          className={`absolute inset-0 transition-opacity duration-700 ${i === current ? "opacity-100" : "opacity-0"}`}
-        >
-          <img src={resolveImageUrl(b.image)} alt={b.title} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-black/40" />
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
-            {b.title && <h2 className="text-4xl md:text-5xl font-bold mb-4">{b.title}</h2>}
-            {b.subtitle && <p className="text-lg md:text-xl mb-6 opacity-90">{b.subtitle}</p>}
-            {b.link && (
-              <Link href={b.link} className="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-full text-white font-medium transition-colors">
-                了解更多
-              </Link>
-            )}
-          </div>
+    <div style={{ position: "relative", width: "100%", aspectRatio: "4 / 3", overflow: "hidden", background: "var(--fg)" }}>
+      <img
+        src={resolveImageUrl(b.image)}
+        alt={b.title}
+        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+      />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.6), transparent)" }} />
+      {(b.title || b.subtitle) && (
+        <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, padding: 20, color: "#fff" }}>
+          {b.title && <div style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 700 }}>{b.title}</div>}
+          {b.subtitle && <div style={{ fontSize: 13, opacity: 0.85, marginTop: 4 }}>{b.subtitle}</div>}
         </div>
-      ))}
+      )}
       {banners.length > 1 && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+        <div style={{ position: "absolute", bottom: 16, right: 16, display: "flex", gap: 6 }}>
           {banners.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrent(i)}
-              className={`w-3 h-3 rounded-full transition-colors ${i === current ? "bg-white" : "bg-white/50"}`}
+              aria-label={`第 ${i + 1} 张`}
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                border: "none",
+                cursor: "pointer",
+                background: i === current ? "#fff" : "rgba(255,255,255,0.5)",
+                padding: 0,
+              }}
             />
           ))}
         </div>
       )}
-    </section>
+    </div>
   );
 }

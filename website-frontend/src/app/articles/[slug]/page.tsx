@@ -20,26 +20,46 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
   try { article = await getArticleBySlug(slug); } catch { notFound(); }
   if (!article) notFound();
 
+  const date = article.publishTime?.slice(0, 10) || article.createTime?.slice(0, 10);
+  const tags = article.tags ? article.tags.split(",").filter(Boolean) : [];
+
   return (
-    <article className="max-w-4xl mx-auto px-4 py-16">
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{article.title}</h1>
-      <div className="flex items-center gap-4 text-sm text-gray-500 mb-8">
-        <span>{article.publishTime?.slice(0, 10) || article.createTime?.slice(0, 10)}</span>
-        <span>{article.viewCount} 阅读</span>
-        {article.tags && (
-          <div className="flex gap-2">
-            {article.tags.split(",").map(t => (
-              <span key={t} className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-xs">{t.trim()}</span>
-            ))}
+    <div className="container article-layout">
+      <article>
+        <header className="article-header">
+          <p className="eyebrow">ARTICLE · {date}</p>
+          <h1 className="article-title">{article.title}</h1>
+          {article.summary && <p className="article-abstract">{article.summary}</p>}
+          <div className="article-meta">
+            <span>{date}</span>
+            <span>{article.viewCount} 阅读</span>
+            {tags.map(t => <span key={t}>{t.trim()}</span>)}
           </div>
+        </header>
+
+        {article.cover && (
+          <img
+            src={resolveImageUrl(article.cover)}
+            alt={article.title}
+            style={{ width: "100%", margin: "28px 0 0", border: "1px solid var(--border)" }}
+          />
         )}
-      </div>
-      {article.cover && (
-        <img src={resolveImageUrl(article.cover)} alt={article.title} className="w-full rounded-xl mb-8" />
-      )}
-      {article.content && (
-        <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: unescapeHtml(article.content) }} />
-      )}
-    </article>
+
+        {article.content && (
+          <div
+            className="prose"
+            style={{ marginTop: 32 }}
+            dangerouslySetInnerHTML={{ __html: unescapeHtml(article.content) }}
+          />
+        )}
+      </article>
+
+      <aside className="aside-stack">
+        <div className="side-panel">
+          <h3>关于本站</h3>
+          <p>这里记录我们的最新动态与行业洞察，欢迎订阅关注。</p>
+        </div>
+      </aside>
+    </div>
   );
 }

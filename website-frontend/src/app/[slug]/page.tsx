@@ -21,10 +21,16 @@ export default async function CustomPage({ params }: { params: Promise<{ slug: s
   if (!page) notFound();
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">{page.title}</h1>
+    <div className="container" style={{ padding: "56px 0 88px" }}>
+      <div className="page-hero" style={{ borderBottom: "1px solid var(--border)" }}>
+        <h1>{page.title}</h1>
+      </div>
       {page.content && (
-        <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: unescapeHtml(page.content) }} />
+        <div
+          className="prose"
+          style={{ marginTop: 40, maxWidth: "none" }}
+          dangerouslySetInnerHTML={{ __html: unescapeHtml(page.content) }}
+        />
       )}
     </div>
   );
