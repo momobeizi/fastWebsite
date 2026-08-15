@@ -559,7 +559,7 @@ h3 {
 
 .article-title {
   margin: 0 0 20px;
-  font-size: clamp(38px, 5vw, 64px);
+  font-size: clamp(28px, 3.2vw, 44px);
   line-height: 1.4;
   font-weight: 700;
 }

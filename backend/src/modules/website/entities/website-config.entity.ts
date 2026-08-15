@@ -26,4 +26,16 @@ export class WebsiteConfig extends BaseEntity {
 
   @Column({ length: 50, nullable: true, comment: 'ICP备案号' })
   icp?: string;
+
+  @Column({ length: 100, nullable: true, comment: '联系邮箱' })
+  email?: string;
+
+  @Column({ length: 200, nullable: true, comment: '联系电话' })
+  contactPhone?: string;
+
+  @Column({ length: 255, nullable: true, comment: '联系地址' })
+  address?: string;
+
+  @Column({ type: 'json', nullable: true, comment: '社交账号列表' })
+  socials?: any[];
 }

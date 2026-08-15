@@ -38,6 +38,10 @@ export interface WebsiteConfig {
   seoDescription?: string;
   footerInfo?: string;
   icp?: string;
+  email?: string;
+  contactPhone?: string;
+  address?: string;
+  socials?: { platform: string; name: string; url?: string }[];
 }
 
 export interface WebsiteNav {
