@@ -30,7 +30,6 @@ export default async function HomePage() {
   } catch {}
 
   const siteName = config?.siteName || "官方网站";
-  const brandChar = siteName.charAt(0);
 
   return (
     <>

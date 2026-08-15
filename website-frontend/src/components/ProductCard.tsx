@@ -13,9 +13,6 @@ export default function ProductCard({ product }: { product: WebsiteProduct }) {
       <div className="product-body">
         <h3>{product.name}</h3>
         {product.summary && <p className="product-summary">{product.summary}</p>}
-        {product.price != null && (
-          <span className="product-price">¥{product.price}</span>
-        )}
       </div>
     </Link>
   );
